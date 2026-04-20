@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CAM Granfluencers | Wiki</title>
+    <link rel="stylesheet" href="./assets/css/site.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <a class="brand" href="./index.zh-CN.html">CAM Granfluencers</a>
+        <div class="lang-switch">
+          <a href="./wiki.html">English</a>
+          <span>/</span>
+          <a class="is-active" href="./wiki.zh-CN.html">中文</a>
+        </div>
+        <p class="sidebar-title">站点导航</p>
+        <nav class="nav-list">
+          <a class="nav-link" href="./index.zh-CN.html">首页</a>
+          <a class="nav-link is-active" href="./wiki.zh-CN.html">Wiki</a>
+          <a class="nav-link" href="./collect.zh-CN.html">收集</a>
+          <a class="nav-link" href="./analysis.zh-CN.html">分析</a>
+          <a class="nav-link" href="./results.zh-CN.html">结果</a>
+          <a class="nav-link" href="./setup.zh-CN.html">配置</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header class="page-header">
+          <p class="eyebrow">Wiki</p>
+          <h1>项目地图与文档规则</h1>
+          <p class="lede">
+            这一页记录仓库结构，以及保持双语文档站、代码实现和 GitHub Pages 发布内容一致所需的关键规则。
+          </p>
+        </header>
+
+        <section class="panel">
+          <h2>仓库结构</h2>
+          <div class="card-grid">
+            <article class="card">
+              <h3><code>docs/</code></h3>
+              <p>
+                由 GitHub Pages 发布的双语 HTML 站点。它是项目面向使用者的流程、导航和页面结构的规范来源。
+              </p>
+            </article>
+            <article class="card">
+              <h3><code>src/collect/</code></h3>
+              <p>
+                Python 数据采集层，负责 TikHub 访问、规范化处理、导出以及本地数据准备命令。
+              </p>
+            </article>
+            <article class="card">
+              <h3><code>data/</code></h3>
+              <p>
+                项目的规范数据目录。原始采集运行保存在 <code>data/collect/</code>，面向站点的数据保存在
+                <code>data/dashboard/</code>。
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>文档优先规则</h2>
+          <ul>
+            <li><code>docs/</code> 已经改成 HTML 站点，新文档页面应继续使用 HTML，而不是 Markdown。</li>
+            <li>每个页面都必须保留英文版与简体中文版。</li>
+            <li>每对页面都要在顶部提供明显的语言切换入口。</li>
+            <li>主页为 <code>docs/index.html</code>，主导航结构应保持稳定。</li>
+            <li>如果代码行为和文档站承诺不一致，应优先修复代码，或者在同一次修改中同步更新两者。</li>
+          </ul>
+        </section>
+
+        <section class="panel">
+          <h2>数据发布流程</h2>
+          <ol>
+            <li>先把采集结果写入 <code>data/collect/</code>。</li>
+            <li>再把 dashboard JSON 导出到 <code>data/dashboard/</code>。</li>
+            <li>把发布所需副本同步到 <code>docs/data/</code>。</li>
+            <li>需要发布时，同时提交文档改动和同步后的站点数据。</li>
+          </ol>
+          <pre><code>python3 -m src.collect collect-account --platform instagram --username nasa --max-posts 5
+python3 -m src.collect export-dashboard --input data/collect
+python3 -m src.collect sync-docs-data</code></pre>
+        </section>
+
+        <section class="panel">
+          <h2>为什么改成 HTML</h2>
+          <p>
+            站点改成 HTML 后，GitHub Pages 的输出会更稳定，也更方便继续扩展导航栏、自定义布局、脚本逻辑，以及未来的
+            TypeScript 或可视化层，而不再受 Markdown 默认渲染方式的限制。
+          </p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

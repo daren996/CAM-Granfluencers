@@ -69,20 +69,37 @@
 
 ## 文档站点
 
-项目文档站点内容位于 [`docs/`](./docs/)。
-`docs/` 中的文档也采用中英双份，并在修改时保持同步。
+项目文档站点内容位于 [`docs/`](./docs/)，并已经改成中英双语的 HTML 站点。
+`docs/` 是项目面向使用者的规范来源，代码变更也应与其中说明保持一致。
 
-- 首页入口：[`docs/index.md`](./docs/index.md)
-- 中文首页：[`docs/index.zh-CN.md`](./docs/index.zh-CN.md)
-- 采集指南：[`docs/collect.zh-CN.md`](./docs/collect.zh-CN.md)
-- Collection Guide：[`docs/collect.md`](./docs/collect.md)
-- 数据展示方案：[`docs/dashboard.md`](./docs/dashboard.md)
-- 中文数据展示方案：[`docs/dashboard.zh-CN.md`](./docs/dashboard.zh-CN.md)
-- 配置说明：[`docs/setup.md`](./docs/setup.md)
-- 中文配置说明：[`docs/setup.zh-CN.md`](./docs/setup.zh-CN.md)
+- 首页入口：[`docs/index.html`](./docs/index.html)
+- 中文首页：[`docs/index.zh-CN.html`](./docs/index.zh-CN.html)
+- Wiki：[`docs/wiki.html`](./docs/wiki.html)
+- 中文 Wiki：[`docs/wiki.zh-CN.html`](./docs/wiki.zh-CN.html)
+- 采集指南：[`docs/collect.zh-CN.html`](./docs/collect.zh-CN.html)
+- Collection Guide：[`docs/collect.html`](./docs/collect.html)
+- 分析页面：[`docs/analysis.html`](./docs/analysis.html)
+- 中文分析页面：[`docs/analysis.zh-CN.html`](./docs/analysis.zh-CN.html)
+- 结果页面：[`docs/results.html`](./docs/results.html)
+- 中文结果页面：[`docs/results.zh-CN.html`](./docs/results.zh-CN.html)
+- 配置说明：[`docs/setup.html`](./docs/setup.html)
+- 中文配置说明：[`docs/setup.zh-CN.html`](./docs/setup.zh-CN.html)
 
-项目主页计划采用 GitHub Pages 上的静态 dashboard 方案。
-后续会把采集与处理后的数据导出到 `docs/assets/data/` 下，再由前端页面读取这些 JSON 文件来展示表格和可视化内容。
+项目的规范数据目录位于 `data/dashboard/`。
+发布站点读取的是同步后的 `docs/data/` 镜像文件。
+
+当采集代码或数据更新后，可以用下面的命令刷新站点数据：
+
+```bash
+python3 -m src.collect export-dashboard --input data/collect
+python3 -m src.collect sync-docs-data
+```
+
+也可以直接使用组合命令：
+
+```bash
+make docs-data
+```
 
 如果要把它发布成 GitHub 项目主页，最简单的做法是：
 

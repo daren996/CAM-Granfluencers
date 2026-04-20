@@ -15,15 +15,16 @@
 
 # Docs
 
-- All files in `docs/` should be maintained in bilingual pairs.
-- English docs use the default filenames such as `docs/index.md` and `docs/setup.md`.
-- Simplified Chinese docs use matching `*.zh-CN.md` files.
-- Each docs file should begin with a language switch like:
-  `[English](./index.md) | [中文](./index.zh-CN.md)`
-- When one docs file is updated, sync its counterpart as well.
-- `docs/index.md` is the documentation homepage and future project site entry.
-- `docs/setup.md` documents the GitHub Pages setup steps.
-- `README.md` and `README.zh-CN.md` should both mention the docs site.
+- `docs/` is an HTML-based bilingual site. Do not add new Markdown docs under `docs/`.
+- English docs use filenames such as `docs/index.html` and `docs/setup.html`.
+- Simplified Chinese docs use matching `*.zh-CN.html` files.
+- Every docs page must include a visible language switch linking its bilingual counterpart.
+- `docs/index.html` is the project homepage and should expose navigation to pages such as wiki, collect, analysis, and results.
+- When one docs page is updated, sync its counterpart as well.
+- `docs/` is the source of truth for user-facing workflows and behavior. If code conflicts with `docs/`, fix the code or update both in the same change.
+- Canonical project data lives under `data/`. The published site reads mirrored files under `docs/data/`, so keep those locations synchronized when data or export code changes.
+- Keep the docs workflow able to run `src/` code locally for data refresh and site preparation.
+- `README.md` and `README.zh-CN.md` should both mention the HTML docs site and the data sync workflow.
 - For GitHub Pages, use the repository default branch and publish the `/docs` folder.
 - The published URL will usually look like:
   `https://<your-github-username>.github.io/<repository-name>/`

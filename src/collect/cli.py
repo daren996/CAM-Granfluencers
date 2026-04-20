@@ -9,7 +9,7 @@ from .env import load_dotenv_if_present
 from .exceptions import TikHubConfigurationError, TikHubError
 from .models import AccountRef
 from .service import collect_account_bundle
-from .exporter import export_dashboard_data
+from .exporter import export_dashboard_data, sync_docs_data
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -50,8 +50,23 @@ def build_parser() -> argparse.ArgumentParser:
     )
     export_parser.add_argument(
         "--output-dir",
-        default="docs/assets/data",
+        default="data/dashboard",
         help="Dashboard data output directory.",
+    )
+
+    sync_parser = subparsers.add_parser(
+        "sync-docs-data",
+        help="Copy dashboard JSON files into docs/data for the published site.",
+    )
+    sync_parser.add_argument(
+        "--source-dir",
+        default="data/dashboard",
+        help="Canonical dashboard data directory.",
+    )
+    sync_parser.add_argument(
+        "--docs-dir",
+        default="docs/data",
+        help="Published docs data directory.",
     )
 
     subparsers.add_parser(
@@ -85,6 +100,11 @@ def main() -> int:
 
     if args.command == "export-dashboard":
         written = export_dashboard_data(args.input, output_dir=args.output_dir)
+        print(json.dumps(written, indent=2, ensure_ascii=True))
+        return 0
+
+    if args.command == "sync-docs-data":
+        written = sync_docs_data(args.source_dir, docs_dir=args.docs_dir)
         print(json.dumps(written, indent=2, ensure_ascii=True))
         return 0
 

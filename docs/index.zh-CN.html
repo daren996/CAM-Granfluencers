@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CAM Granfluencers | 首页</title>
+    <link rel="stylesheet" href="./assets/css/site.css" />
+    <script defer src="./assets/js/dashboard.js"></script>
+    <script defer src="./assets/js/site.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <a class="brand" href="./index.zh-CN.html">CAM Granfluencers</a>
+        <div class="lang-switch">
+          <a href="./index.html">English</a>
+          <span>/</span>
+          <a class="is-active" href="./index.zh-CN.html">中文</a>
+        </div>
+        <p class="sidebar-title">站点导航</p>
+        <nav class="nav-list">
+          <a class="nav-link is-active" href="./index.zh-CN.html">首页</a>
+          <a class="nav-link" href="./wiki.zh-CN.html">Wiki</a>
+          <a class="nav-link" href="./collect.zh-CN.html">收集</a>
+          <a class="nav-link" href="./analysis.zh-CN.html">分析</a>
+          <a class="nav-link" href="./results.zh-CN.html">结果</a>
+          <a class="nav-link" href="./setup.zh-CN.html">配置</a>
+        </nav>
+        <div class="sidebar-note">
+          <strong>以文档为先。</strong><code>docs/</code> 中的 HTML 站点是项目对外流程的规范来源。
+          如果代码与文档冲突，应优先修复代码或同步修正文档。
+        </div>
+      </aside>
+
+      <main class="content">
+        <header class="page-header">
+          <p class="eyebrow">项目主页</p>
+          <h1>数字媒体中的老年网红</h1>
+          <p class="lede">
+            这是一个双语项目站点，用于组织关于老年社交媒体创作者的计算研究，包括内容策略、互动模式与受众回应。
+          </p>
+        </header>
+
+        <section class="panel hero-grid">
+          <div>
+            <span class="kicker">站点定位</span>
+            <h2>一个主页，连接多条研究工作流</h2>
+            <p>
+              当前首页连接项目 Wiki、数据收集、分析页面和结果页面。每个页面都保留英文与中文两个版本，GitHub Pages
+              直接发布 <code>docs/</code> 中的 HTML 文件。
+            </p>
+            <p>
+              项目的规范数据目录位于 <code>data/dashboard/</code>，发布站点读取的是同步到
+              <code>docs/data/</code> 的镜像文件。
+            </p>
+          </div>
+          <div class="card">
+            <span class="kicker">快速入口</span>
+            <ul>
+              <li>用 <a href="./wiki.zh-CN.html">Wiki</a> 查看项目结构与规则。</li>
+              <li>用 <a href="./collect.zh-CN.html">收集</a> 页面管理 TikHub 工作流。</li>
+              <li>用 <a href="./analysis.zh-CN.html">分析</a> 页面查看已同步的数据。</li>
+              <li>用 <a href="./results.zh-CN.html">结果</a> 页面整理研究输出。</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="panel">
+          <span class="kicker">实时概览</span>
+          <h2>已发布的数据快照</h2>
+          <div class="summary-grid" data-site-summary data-lang="zh-CN"></div>
+        </section>
+
+        <section class="card-grid">
+          <article class="card">
+            <span class="kicker">Wiki</span>
+            <h3>项目地图与规范</h3>
+            <p>这一页记录项目结构、文档优先规则和双语站点约定。</p>
+            <p><a href="./wiki.zh-CN.html">打开 Wiki</a></p>
+          </article>
+          <article class="card">
+            <span class="kicker">收集</span>
+            <h3>TikHub 数据采集流程</h3>
+            <p>这里说明 API 配置、采集存储结构，以及从 bundle 到站点数据的转换步骤。</p>
+            <p><a href="./collect.zh-CN.html">打开采集说明</a></p>
+          </article>
+          <article class="card">
+            <span class="kicker">分析</span>
+            <h3>HTML 化的数据视图</h3>
+            <p>查看同步后的 JSON 数据、最新帖子、标签统计和时间线概览。</p>
+            <p><a href="./analysis.zh-CN.html">打开分析页面</a></p>
+          </article>
+          <article class="card">
+            <span class="kicker">结果</span>
+            <h3>研究发现与输出</h3>
+            <p>在这里组织阶段性结果、论文写作材料和后续还需要补充的分析。</p>
+            <p><a href="./results.zh-CN.html">打开结果页面</a></p>
+          </article>
+        </section>
+
+        <section class="panel">
+          <span class="kicker">工作流</span>
+          <h2>文档站如何连接仓库</h2>
+          <ol>
+            <li>通过 <code>src/collect/</code> 完成账号数据采集与规范化。</li>
+            <li>把规范数据导出到 <code>data/dashboard/</code>。</li>
+            <li>把发布所需副本同步到 <code>docs/data/</code>。</li>
+            <li>由 GitHub Pages 直接发布 <code>docs/</code> 中的 HTML 站点。</li>
+          </ol>
+          <pre><code>python3 -m src.collect export-dashboard --input data/collect
+python3 -m src.collect sync-docs-data
+make docs-data</code></pre>
+        </section>
+
+        <p class="footer-note">
+          仓库地址：
+          <a href="https://github.com/daren996/CAM-Granfluencers">daren996/CAM-Granfluencers</a>
+        </p>
+      </main>
+    </div>
+  </body>
+</html>

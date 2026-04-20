@@ -8,8 +8,17 @@ from typing import Any
 from .storage import utc_now_iso, write_json
 
 
+DASHBOARD_EXPORT_FILES = {
+    "site_summary": "site-summary.json",
+    "accounts": "accounts.json",
+    "posts": "posts.json",
+    "hashtags": "hashtags.json",
+    "engagement_timeseries": "engagement-timeseries.json",
+}
+
+
 def export_dashboard_data(
-    input_path: str | Path, output_dir: str | Path = "docs/assets/data"
+    input_path: str | Path, output_dir: str | Path = "data/dashboard"
 ) -> dict[str, str]:
     bundles = _load_bundles(Path(input_path))
     output_path = Path(output_dir)
@@ -20,15 +29,34 @@ def export_dashboard_data(
     timeseries = _build_timeseries(posts)
     site_summary = _build_site_summary(accounts, posts, comments, bundles)
 
-    written = {
-        "site_summary": str(write_json(output_path / "site-summary.json", site_summary)),
-        "accounts": str(write_json(output_path / "accounts.json", accounts)),
-        "posts": str(write_json(output_path / "posts.json", posts)),
-        "hashtags": str(write_json(output_path / "hashtags.json", hashtags)),
-        "engagement_timeseries": str(
-            write_json(output_path / "engagement-timeseries.json", timeseries)
-        ),
+    payloads = {
+        "site_summary": site_summary,
+        "accounts": accounts,
+        "posts": posts,
+        "hashtags": hashtags,
+        "engagement_timeseries": timeseries,
     }
+    written = {
+        key: str(write_json(output_path / DASHBOARD_EXPORT_FILES[key], payload))
+        for key, payload in payloads.items()
+    }
+    return written
+
+
+def sync_docs_data(
+    source_dir: str | Path = "data/dashboard", docs_dir: str | Path = "docs/data"
+) -> dict[str, str]:
+    source_path = Path(source_dir)
+    docs_path = Path(docs_dir)
+    written: dict[str, str] = {}
+
+    for key, filename in DASHBOARD_EXPORT_FILES.items():
+        source_file = source_path / filename
+        if not source_file.exists():
+            raise FileNotFoundError(f"Missing dashboard data file: {source_file}")
+        payload = json.loads(source_file.read_text(encoding="utf-8"))
+        written[key] = str(write_json(docs_path / filename, payload))
+
     return written
 
 
@@ -137,7 +165,9 @@ def _build_site_summary(
     bundles: list[dict[str, Any]],
 ) -> dict[str, Any]:
     post_dates = [post["taken_at"] for post in posts if post.get("taken_at")]
-    collected_at_values = [bundle.get("collected_at") for bundle in bundles if bundle.get("collected_at")]
+    collected_at_values = [
+        bundle.get("collected_at") for bundle in bundles if bundle.get("collected_at")
+    ]
     return {
         "updated_at": max(collected_at_values) if collected_at_values else utc_now_iso(),
         "project_status": "ready_with_data" if posts else "waiting_for_data",

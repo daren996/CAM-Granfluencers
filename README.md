@@ -71,20 +71,37 @@ This project is expected to help answer questions such as:
 
 ## Documentation Site
 
-Project documentation for GitHub Pages lives in [`docs/`](./docs/).
-Files in `docs/` are bilingual and should be kept in sync.
+Project documentation for GitHub Pages lives in [`docs/`](./docs/) as a bilingual HTML site.
+Files in `docs/` are the source of truth for user-facing behavior and should be kept in sync with code changes.
 
-- Homepage: [`docs/index.md`](./docs/index.md)
-- Chinese homepage: [`docs/index.zh-CN.md`](./docs/index.zh-CN.md)
-- Collection guide: [`docs/collect.md`](./docs/collect.md)
-- Chinese collection guide: [`docs/collect.zh-CN.md`](./docs/collect.zh-CN.md)
-- Dashboard plan: [`docs/dashboard.md`](./docs/dashboard.md)
-- Chinese dashboard plan: [`docs/dashboard.zh-CN.md`](./docs/dashboard.zh-CN.md)
-- Setup guide: [`docs/setup.md`](./docs/setup.md)
-- Chinese setup guide: [`docs/setup.zh-CN.md`](./docs/setup.zh-CN.md)
+- Homepage: [`docs/index.html`](./docs/index.html)
+- Chinese homepage: [`docs/index.zh-CN.html`](./docs/index.zh-CN.html)
+- Wiki: [`docs/wiki.html`](./docs/wiki.html)
+- Chinese wiki: [`docs/wiki.zh-CN.html`](./docs/wiki.zh-CN.html)
+- Collection guide: [`docs/collect.html`](./docs/collect.html)
+- Chinese collection guide: [`docs/collect.zh-CN.html`](./docs/collect.zh-CN.html)
+- Analysis page: [`docs/analysis.html`](./docs/analysis.html)
+- Chinese analysis page: [`docs/analysis.zh-CN.html`](./docs/analysis.zh-CN.html)
+- Results page: [`docs/results.html`](./docs/results.html)
+- Chinese results page: [`docs/results.zh-CN.html`](./docs/results.zh-CN.html)
+- Setup guide: [`docs/setup.html`](./docs/setup.html)
+- Chinese setup guide: [`docs/setup.zh-CN.html`](./docs/setup.zh-CN.html)
 
-The project homepage is planned to use a static dashboard approach on GitHub Pages.
-Data will be exported into files under `docs/assets/data/`, and the frontend layer will read those JSON files for tables and visualizations after the data collection pipeline is ready.
+Canonical dashboard data lives under `data/dashboard/`.
+The published site reads a synchronized copy under `docs/data/`.
+
+To refresh site data after running the collector:
+
+```bash
+python3 -m src.collect export-dashboard --input data/collect
+python3 -m src.collect sync-docs-data
+```
+
+Or use the combined helper:
+
+```bash
+make docs-data
+```
 
 To publish it as the project website on GitHub:
 

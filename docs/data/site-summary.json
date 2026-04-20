@@ -1,0 +1,13 @@
+{
+  "updated_at": null,
+  "project_status": "waiting_for_data",
+  "counts": {
+    "accounts": 0,
+    "posts": 0,
+    "comments": 0
+  },
+  "date_range": {
+    "start": null,
+    "end": null
+  }
+}

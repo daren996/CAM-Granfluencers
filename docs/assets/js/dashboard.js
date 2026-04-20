@@ -1,9 +1,9 @@
 const DASHBOARD_DATA_FILES = Object.freeze({
-  siteSummary: "./assets/data/site-summary.json",
-  accounts: "./assets/data/accounts.json",
-  posts: "./assets/data/posts.json",
-  hashtags: "./assets/data/hashtags.json",
-  engagementTimeseries: "./assets/data/engagement-timeseries.json",
+  siteSummary: "./data/site-summary.json",
+  accounts: "./data/accounts.json",
+  posts: "./data/posts.json",
+  hashtags: "./data/hashtags.json",
+  engagementTimeseries: "./data/engagement-timeseries.json",
 });
 
 async function fetchDashboardData(key) {
@@ -13,7 +13,7 @@ async function fetchDashboardData(key) {
     throw new Error(`Unknown dashboard data key: ${key}`);
   }
 
-  const response = await fetch(url);
+  const response = await fetch(url, { cache: "no-store" });
 
   if (!response.ok) {
     throw new Error(`Failed to load dashboard data: ${url}`);

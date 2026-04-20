@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CAM Granfluencers | Setup</title>
+    <link rel="stylesheet" href="./assets/css/site.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <a class="brand" href="./index.html">CAM Granfluencers</a>
+        <div class="lang-switch">
+          <a class="is-active" href="./setup.html">English</a>
+          <span>/</span>
+          <a href="./setup.zh-CN.html">中文</a>
+        </div>
+        <p class="sidebar-title">Navigate</p>
+        <nav class="nav-list">
+          <a class="nav-link" href="./index.html">Home</a>
+          <a class="nav-link" href="./wiki.html">Wiki</a>
+          <a class="nav-link" href="./collect.html">Collect</a>
+          <a class="nav-link" href="./analysis.html">Analysis</a>
+          <a class="nav-link" href="./results.html">Results</a>
+          <a class="nav-link is-active" href="./setup.html">Setup</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header class="page-header">
+          <p class="eyebrow">Setup</p>
+          <h1>GitHub Pages and docs data setup</h1>
+          <p class="lede">
+            Use the default branch and publish the <code>/docs</code> folder. The site entry file is
+            now <code>docs/index.html</code>.
+          </p>
+        </header>
+
+        <section class="panel">
+          <h2>GitHub Pages setup</h2>
+          <ol>
+            <li>Push the repository to GitHub.</li>
+            <li>Open the repository page.</li>
+            <li>Go to <strong>Settings</strong> -&gt; <strong>Pages</strong>.</li>
+            <li>Under <strong>Build and deployment</strong>, choose <strong>Deploy from a branch</strong>.</li>
+            <li>Select the default branch, usually <code>main</code>.</li>
+            <li>Select the <code>/docs</code> folder.</li>
+            <li>Save and wait for the deployment to finish.</li>
+          </ol>
+        </section>
+
+        <section class="panel">
+          <h2>Expected URL</h2>
+          <p><code>https://&lt;your-github-username&gt;.github.io/&lt;repository-name&gt;/</code></p>
+        </section>
+
+        <section class="panel">
+          <h2>Data refresh workflow</h2>
+          <p>
+            The site publishes files from <code>docs/</code>, but canonical dashboard data lives in
+            <code>data/dashboard/</code>. Refresh the site copy after export:
+          </p>
+          <pre><code>python3 -m src.collect export-dashboard --input data/collect
+python3 -m src.collect sync-docs-data
+
+# or
+make docs-data</code></pre>
+        </section>
+
+        <section class="panel">
+          <h2>Important notes</h2>
+          <ul>
+            <li>The docs site is HTML-based, so page structure, styling, and scripts live directly in <code>docs/</code>.</li>
+            <li>The published site reads <code>docs/data/*.json</code>.</li>
+            <li>When data contracts change, update the exporter, sync command, and docs pages together.</li>
+          </ul>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

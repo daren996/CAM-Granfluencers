@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from src.collect.exporter import export_dashboard_data
+from src.collect.exporter import export_dashboard_data, sync_docs_data
 
 
 class ExporterTest(unittest.TestCase):
@@ -75,6 +75,41 @@ class ExporterTest(unittest.TestCase):
             self.assertEqual(site_summary["counts"]["comments"], 2)
             hashtags = json.loads((output_dir / "hashtags.json").read_text(encoding="utf-8"))
             self.assertEqual(hashtags[0]["hashtag"], "space")
+
+    def test_sync_docs_data_copies_expected_files(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            source_dir = Path(temp_dir) / "data"
+            docs_dir = Path(temp_dir) / "docs"
+            sample_payloads = {
+                "site-summary.json": {"project_status": "waiting_for_data"},
+                "accounts.json": [],
+                "posts.json": [],
+                "hashtags.json": [],
+                "engagement-timeseries.json": [],
+            }
+            source_dir.mkdir(parents=True, exist_ok=True)
+            for filename, payload in sample_payloads.items():
+                (source_dir / filename).write_text(
+                    json.dumps(payload, ensure_ascii=False, indent=2),
+                    encoding="utf-8",
+                )
+
+            written = sync_docs_data(source_dir=source_dir, docs_dir=docs_dir)
+
+            self.assertEqual(
+                sorted(written.keys()),
+                [
+                    "accounts",
+                    "engagement_timeseries",
+                    "hashtags",
+                    "posts",
+                    "site_summary",
+                ],
+            )
+            self.assertEqual(
+                json.loads((docs_dir / "site-summary.json").read_text(encoding="utf-8")),
+                {"project_status": "waiting_for_data"},
+            )
 
 
 if __name__ == "__main__":

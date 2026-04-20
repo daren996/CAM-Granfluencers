@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CAM Granfluencers | Wiki</title>
+    <link rel="stylesheet" href="./assets/css/site.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <a class="brand" href="./index.html">CAM Granfluencers</a>
+        <div class="lang-switch">
+          <a class="is-active" href="./wiki.html">English</a>
+          <span>/</span>
+          <a href="./wiki.zh-CN.html">中文</a>
+        </div>
+        <p class="sidebar-title">Navigate</p>
+        <nav class="nav-list">
+          <a class="nav-link" href="./index.html">Home</a>
+          <a class="nav-link is-active" href="./wiki.html">Wiki</a>
+          <a class="nav-link" href="./collect.html">Collect</a>
+          <a class="nav-link" href="./analysis.html">Analysis</a>
+          <a class="nav-link" href="./results.html">Results</a>
+          <a class="nav-link" href="./setup.html">Setup</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header class="page-header">
+          <p class="eyebrow">Wiki</p>
+          <h1>Project map and documentation rules</h1>
+          <p class="lede">
+            This page records the structure of the repository and the rules that keep the bilingual
+            docs site, the codebase, and the published GitHub Pages content aligned.
+          </p>
+        </header>
+
+        <section class="panel">
+          <h2>Repository map</h2>
+          <div class="card-grid">
+            <article class="card">
+              <h3><code>docs/</code></h3>
+              <p>
+                Bilingual HTML site published through GitHub Pages. This is the source of truth for
+                project-facing workflows, page structure, and navigation.
+              </p>
+            </article>
+            <article class="card">
+              <h3><code>src/collect/</code></h3>
+              <p>
+                Python collection layer for TikHub access, normalization, export, and local data
+                preparation commands.
+              </p>
+            </article>
+            <article class="card">
+              <h3><code>data/</code></h3>
+              <p>
+                Canonical local data storage. Raw collection runs live in <code>data/collect/</code>,
+                and dashboard-facing outputs live in <code>data/dashboard/</code>.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Docs-first rules</h2>
+          <ul>
+            <li><code>docs/</code> is HTML-based. New docs pages should be added as HTML, not Markdown.</li>
+            <li>Every docs page must have an English and Simplified Chinese pair.</li>
+            <li>Each pair must expose a visible language switch at the top of the page.</li>
+            <li>The homepage is <code>docs/index.html</code> and should keep the main navigation intact.</li>
+            <li>If code behavior conflicts with what the docs site promises, fix the code or update both together.</li>
+          </ul>
+        </section>
+
+        <section class="panel">
+          <h2>Data publication workflow</h2>
+          <ol>
+            <li>Run the collector into <code>data/collect/</code>.</li>
+            <li>Export dashboard JSON into <code>data/dashboard/</code>.</li>
+            <li>Sync the publishable copy into <code>docs/data/</code>.</li>
+            <li>Commit both the docs changes and the synchronized site data when needed.</li>
+          </ol>
+          <pre><code>python3 -m src.collect collect-account --platform instagram --username nasa --max-posts 5
+python3 -m src.collect export-dashboard --input data/collect
+python3 -m src.collect sync-docs-data</code></pre>
+        </section>
+
+        <section class="panel">
+          <h2>Why HTML-based docs</h2>
+          <p>
+            Moving the site to HTML keeps the GitHub Pages output predictable and makes it easier to
+            add custom navigation, layout, scripts, and future TypeScript or visualization layers
+            without relying on Markdown rendering details.
+          </p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

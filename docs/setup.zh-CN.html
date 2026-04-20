@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CAM Granfluencers | 配置</title>
+    <link rel="stylesheet" href="./assets/css/site.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <a class="brand" href="./index.zh-CN.html">CAM Granfluencers</a>
+        <div class="lang-switch">
+          <a href="./setup.html">English</a>
+          <span>/</span>
+          <a class="is-active" href="./setup.zh-CN.html">中文</a>
+        </div>
+        <p class="sidebar-title">站点导航</p>
+        <nav class="nav-list">
+          <a class="nav-link" href="./index.zh-CN.html">首页</a>
+          <a class="nav-link" href="./wiki.zh-CN.html">Wiki</a>
+          <a class="nav-link" href="./collect.zh-CN.html">收集</a>
+          <a class="nav-link" href="./analysis.zh-CN.html">分析</a>
+          <a class="nav-link" href="./results.zh-CN.html">结果</a>
+          <a class="nav-link is-active" href="./setup.zh-CN.html">配置</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header class="page-header">
+          <p class="eyebrow">配置</p>
+          <h1>GitHub Pages 与站点数据配置</h1>
+          <p class="lede">
+            请使用默认分支并发布 <code>/docs</code> 文件夹。站点入口文件现在是
+            <code>docs/index.html</code>。
+          </p>
+        </header>
+
+        <section class="panel">
+          <h2>GitHub Pages 设置步骤</h2>
+          <ol>
+            <li>先把仓库推送到 GitHub。</li>
+            <li>打开仓库页面。</li>
+            <li>进入 <strong>Settings</strong> -&gt; <strong>Pages</strong>。</li>
+            <li>在 <strong>Build and deployment</strong> 中选择 <strong>Deploy from a branch</strong>。</li>
+            <li>选择默认分支，通常是 <code>main</code>。</li>
+            <li>选择 <code>/docs</code> 文件夹。</li>
+            <li>保存并等待部署完成。</li>
+          </ol>
+        </section>
+
+        <section class="panel">
+          <h2>预计访问地址</h2>
+          <p><code>https://&lt;your-github-username&gt;.github.io/&lt;repository-name&gt;/</code></p>
+        </section>
+
+        <section class="panel">
+          <h2>数据刷新流程</h2>
+          <p>
+            站点实际发布的是 <code>docs/</code> 中的文件，但规范的 dashboard 数据保存在
+            <code>data/dashboard/</code>。导出后还需要同步发布副本：
+          </p>
+          <pre><code>python3 -m src.collect export-dashboard --input data/collect
+python3 -m src.collect sync-docs-data
+
+# 或者
+make docs-data</code></pre>
+        </section>
+
+        <section class="panel">
+          <h2>重要说明</h2>
+          <ul>
+            <li>文档站已经改成 HTML，因此页面结构、样式和脚本都直接维护在 <code>docs/</code> 内。</li>
+            <li>发布站点读取的是 <code>docs/data/*.json</code>。</li>
+            <li>当数据约定发生变化时，应同时更新导出器、同步命令和文档页面。</li>
+          </ul>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

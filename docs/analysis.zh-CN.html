@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CAM Granfluencers | 分析</title>
+    <link rel="stylesheet" href="./assets/css/site.css" />
+    <script defer src="./assets/js/dashboard.js"></script>
+    <script defer src="./assets/js/site.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <a class="brand" href="./index.zh-CN.html">CAM Granfluencers</a>
+        <div class="lang-switch">
+          <a href="./analysis.html">English</a>
+          <span>/</span>
+          <a class="is-active" href="./analysis.zh-CN.html">中文</a>
+        </div>
+        <p class="sidebar-title">站点导航</p>
+        <nav class="nav-list">
+          <a class="nav-link" href="./index.zh-CN.html">首页</a>
+          <a class="nav-link" href="./wiki.zh-CN.html">Wiki</a>
+          <a class="nav-link" href="./collect.zh-CN.html">收集</a>
+          <a class="nav-link is-active" href="./analysis.zh-CN.html">分析</a>
+          <a class="nav-link" href="./results.zh-CN.html">结果</a>
+          <a class="nav-link" href="./setup.zh-CN.html">配置</a>
+        </nav>
+      </aside>
+
+      <main class="content" data-analysis-root data-lang="zh-CN">
+        <header class="page-header">
+          <p class="eyebrow">分析</p>
+          <h1>基于 HTML 的分析与 dashboard 视图</h1>
+          <p class="lede">
+            这一页是文档站中的 dashboard。页面读取的是同步后的 <code>docs/data/</code> JSON，
+            而规范的导出数据仍然保存在 <code>data/dashboard/</code>。
+          </p>
+        </header>
+
+        <section class="panel">
+          <span class="kicker">快照</span>
+          <h2>站点概览</h2>
+          <div class="summary-grid" data-site-summary data-lang="zh-CN"></div>
+        </section>
+
+        <section class="panel">
+          <h2>账号</h2>
+          <div data-analysis-accounts></div>
+        </section>
+
+        <section class="panel">
+          <h2>最新帖子</h2>
+          <div data-analysis-posts></div>
+        </section>
+
+        <section class="panel">
+          <h2>高频标签</h2>
+          <div data-analysis-hashtags></div>
+        </section>
+
+        <section class="panel">
+          <h2>互动时间线</h2>
+          <div data-analysis-timeline></div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

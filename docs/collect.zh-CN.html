@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CAM Granfluencers | 收集</title>
+    <link rel="stylesheet" href="./assets/css/site.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <a class="brand" href="./index.zh-CN.html">CAM Granfluencers</a>
+        <div class="lang-switch">
+          <a href="./collect.html">English</a>
+          <span>/</span>
+          <a class="is-active" href="./collect.zh-CN.html">中文</a>
+        </div>
+        <p class="sidebar-title">站点导航</p>
+        <nav class="nav-list">
+          <a class="nav-link" href="./index.zh-CN.html">首页</a>
+          <a class="nav-link" href="./wiki.zh-CN.html">Wiki</a>
+          <a class="nav-link is-active" href="./collect.zh-CN.html">收集</a>
+          <a class="nav-link" href="./analysis.zh-CN.html">分析</a>
+          <a class="nav-link" href="./results.zh-CN.html">结果</a>
+          <a class="nav-link" href="./setup.zh-CN.html">配置</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header class="page-header">
+          <p class="eyebrow">收集</p>
+          <h1>TikHub 数据采集指南</h1>
+          <p class="lede">
+            当前仓库使用 TikHub 作为上游社交媒体数据提供方。第一批已实现的平台是 Instagram，但采集层已经按可扩展方式设计，后续可以继续接入更多平台。
+          </p>
+        </header>
+
+        <section class="panel">
+          <h2>为什么使用 TikHub</h2>
+          <ul>
+            <li>一个 API key 可以覆盖多个社交平台。</li>
+            <li>Instagram 相关接口已经覆盖资料、帖子分页、评论、回复和搜索。</li>
+            <li>规范化、存储、导出和文档发布逻辑仍然由仓库自己维护。</li>
+          </ul>
+        </section>
+
+        <section class="panel">
+          <h2>API key 配置</h2>
+          <ol>
+            <li>注册或登录 TikHub 账号。</li>
+            <li>在 TikHub dashboard 中生成 API key。</li>
+            <li>把 key 写入本地 <code>.env</code>。</li>
+          </ol>
+          <pre><code>TIKHUB_API_KEY=your_real_api_key</code></pre>
+        </section>
+
+        <section class="panel">
+          <h2>采集架构</h2>
+          <ul>
+            <li><code>src/collect/</code>：client、采集接口、Instagram 实现、CLI 和导出逻辑。</li>
+            <li><code>data/collect/</code>：原始 API 快照与规范化后的 bundle。</li>
+            <li><code>data/dashboard/</code>：规范的 dashboard JSON 数据。</li>
+            <li><code>docs/data/</code>：发布站点使用的镜像副本。</li>
+          </ul>
+          <p>当前主要命令入口包括：</p>
+          <ul>
+            <li><code>python3 -m src.collect collect-account ...</code></li>
+            <li><code>python3 -m src.collect export-dashboard --input data/collect</code></li>
+            <li><code>python3 -m src.collect sync-docs-data</code></li>
+          </ul>
+        </section>
+
+        <section class="panel">
+          <h2>本地运行方式</h2>
+          <pre><code>python3 -m src.collect collect-account \
+  --platform instagram \
+  --username nasa \
+  --max-posts 5
+
+python3 -m src.collect collect-account \
+  --platform instagram \
+  --username nasa \
+  --include-comments \
+  --max-posts 3 \
+  --max-comment-pages 2
+
+python3 -m src.collect export-dashboard --input data/collect
+python3 -m src.collect sync-docs-data</code></pre>
+        </section>
+
+        <section class="panel">
+          <h2>写入 <code>data/</code> 的内容</h2>
+          <p>每次采集都会写入一个带时间戳的运行目录：</p>
+          <pre><code>data/collect/&lt;platform&gt;/&lt;account-slug&gt;/&lt;run-id&gt;/</code></pre>
+          <ul>
+            <li><code>bundle.json</code>：规范化后的 profile、posts、comments、replies 与请求元数据。</li>
+            <li><code>raw/account/profile.json</code>：账号资料原始返回。</li>
+            <li><code>raw/account_posts/*.json</code>：帖子分页原始返回。</li>
+            <li><code>raw/post_detail/*.json</code>：帖子详情原始返回。</li>
+            <li><code>raw/comments/*.json</code>：评论分页原始返回。</li>
+            <li><code>raw/replies/*.json</code>：回复分页原始返回。</li>
+          </ul>
+        </section>
+
+        <section class="panel">
+          <h2>Dashboard 导出约定</h2>
+          <p>导出器会把采集 bundle 转成供站点使用的静态 JSON，规范文件包括：</p>
+          <ul>
+            <li><code>data/dashboard/site-summary.json</code></li>
+            <li><code>data/dashboard/accounts.json</code></li>
+            <li><code>data/dashboard/posts.json</code></li>
+            <li><code>data/dashboard/hashtags.json</code></li>
+            <li><code>data/dashboard/engagement-timeseries.json</code></li>
+          </ul>
+          <p>
+            随后的 <code>sync-docs-data</code> 命令会把这些文件复制到 <code>docs/data/</code>，
+            供 GitHub Pages 发布后的 HTML 页面读取。
+          </p>
+        </section>
+
+        <section class="panel">
+          <h2>计费与限流说明</h2>
+          <p>
+            TikHub 采用按量付费。根据 2026 年 4 月 19 日公开页面，本项目使用的若干 Instagram
+            接口标注为 <code>0.002 USD/request</code>，但价格随时可能变化，正式大规模采集前应重新确认。
+          </p>
+          <ul>
+            <li><a href="https://tikhub.io/pricing">TikHub pricing</a></li>
+            <li><a href="https://docs.tikhub.io/">TikHub docs</a></li>
+          </ul>
+        </section>
+
+        <section class="panel">
+          <h2>错误处理</h2>
+          <ul>
+            <li><code>401</code>：API key 缺失、无效或已过期。</li>
+            <li><code>402</code>：余额不足，无法访问付费接口。</li>
+            <li><code>429</code>：达到限流阈值，client 会执行退避重试。</li>
+            <li><code>5xx</code>：上游临时故障会自动重试。</li>
+          </ul>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
