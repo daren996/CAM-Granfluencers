@@ -1,0 +1,117 @@
+[English](README.md) | [中文](README.zh-CN.md)
+
+# 数字媒体中的老年网红：关于内容、互动与用户回应的计算分析
+
+## 项目目标
+本项目使用计算传播与计算社会科学方法，研究社交媒体中的老年网红（granfluencers）。项目重点关注其内容生产、媒介呈现方式以及用户互动行为，并进一步探讨他们如何影响受众参与、感知与广告传播效果。通过对大规模社交媒体数据的分析，本项目旨在更系统地理解 granfluencers 在数字传播与说服中的角色。
+
+## 研究流程
+
+### 1. 数据收集
+收集与 Instagram 平台 granfluencers 相关的大规模社交媒体数据，重点包括：
+
+- Granfluencer 名单
+- 帖子（Post）
+- 标题文案（Caption）
+- 图片（Image）
+- 图片详细描述，如行为、颜色、物品、背景、人物存在、活动、身体暴露、面部表情等
+- 话题标签（Hashtag）
+- 发布时间与日期（Time / Date）
+- 互动数据，包括点赞、评论、分享
+- 创作者回复率（Creator Reply Rate）
+- 广告内容（Ad）
+- 产品信息（Product）
+- 品牌信息（Brand）
+- 商业内容占比（Percentage）
+- Granfluencer 账号画像（Profile of Granfluencer）
+- 帖子评论详情（Post Comments in Detail）
+
+### 2. 数据预处理
+采用计算方法对原始数据进行清洗、整理与结构化处理，包括但不限于：
+
+- 文本预处理
+- 图像内容描述与编码
+- 评论数据整理
+- 广告与品牌信息标注
+- 时间与互动指标标准化
+
+### 3. 计算分析
+使用自然语言处理（NLP）、主题模型（Topic Modeling）或基于大语言模型（LLM-based Coding）的方法，分析内容特征与媒介呈现方式，例如：
+
+- 温暖感（Warmth）
+- 日常性（Everydayness）
+- 创造力（Creativity）
+- 商业意图（Commercial Intent）
+
+### 4. 数据分析
+结合内容特征、用户互动与广告变量，进一步分析：
+
+- 哪些内容特征更容易引发较高互动
+- 用户如何回应 granfluencer 的形象与表达
+- 商业合作内容如何影响用户反应与传播效果
+
+### 5. 结果解释
+从数字传播、用户感知与社交媒体说服机制的角度，对分析结果进行解释，并讨论 granfluencers 在平台文化与品牌传播中的意义。
+
+### 6. 潜在结论
+本项目预期将帮助回答以下问题：
+
+- Granfluencers 在社交媒体中通常呈现出怎样的内容风格与形象特征
+- 哪些因素与更高的用户参与度相关
+- 他们如何影响用户对内容、品牌与广告的感知
+- 老年创作者在数字传播生态中的独特价值是什么
+
+## 关键词
+
+`granfluencers` `social media` `Instagram` `computational analysis` `digital communication` `engagement` `advertising` `user response`
+
+---
+
+## 文档站点
+
+项目文档站点内容位于 [`docs/`](./docs/)。
+`docs/` 中的文档也采用中英双份，并在修改时保持同步。
+
+- 首页入口：[`docs/index.md`](./docs/index.md)
+- 中文首页：[`docs/index.zh-CN.md`](./docs/index.zh-CN.md)
+- 采集指南：[`docs/collect.zh-CN.md`](./docs/collect.zh-CN.md)
+- Collection Guide：[`docs/collect.md`](./docs/collect.md)
+- 数据展示方案：[`docs/dashboard.md`](./docs/dashboard.md)
+- 中文数据展示方案：[`docs/dashboard.zh-CN.md`](./docs/dashboard.zh-CN.md)
+- 配置说明：[`docs/setup.md`](./docs/setup.md)
+- 中文配置说明：[`docs/setup.zh-CN.md`](./docs/setup.zh-CN.md)
+
+项目主页计划采用 GitHub Pages 上的静态 dashboard 方案。
+后续会把采集与处理后的数据导出到 `docs/assets/data/` 下，再由前端页面读取这些 JSON 文件来展示表格和可视化内容。
+
+如果要把它发布成 GitHub 项目主页，最简单的做法是：
+
+1. 将仓库推送到 GitHub
+2. 打开仓库的 **Settings**
+3. 进入 **Pages**
+4. 选择 **Deploy from a branch**
+5. 分支选择 `main`（或你的默认分支）
+6. 文件夹选择 `/docs`
+
+发布后，地址通常会是：
+
+`https://<你的 GitHub 用户名>.github.io/<仓库名>/`
+
+## 测试
+
+在仓库根目录可以使用统一测试入口：
+
+- `make test` 或 `make test-all`：运行全部测试
+- `make test-client`：只运行 TikHub client 单元测试
+- `make test-collect`：运行采集层相关测试
+- `make check-client-live`：使用 `.env` 中的 key 运行真实 TikHub 连通性检查
+
+同样也可以直接使用：
+
+`python3 scripts/run_tests.py <all|client|collect>`
+
+如果要做真实的 TikHub 在线检查，可以运行：
+
+`python3 -m src.collect check`
+
+CLI 会在本地存在 `.env` 时自动读取它，并使用其中的 `TIKHUB_API_KEY`；如果当前 shell 已经设置了同名环境变量，则优先使用 shell 中的值。

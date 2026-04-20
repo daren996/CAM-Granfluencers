@@ -1,0 +1,53 @@
+# macOS
+.DS_Store
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment and local overrides
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+venv/
+env/
+
+# Node.js
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+
+# Build outputs
+build/
+dist/
+coverage/
+.cache/
+
+# Keep placeholder files for empty project folders
+!config/.gitkeep
+!data/.gitkeep
+!scripts/.gitkeep
+!src/.gitkeep
+!tests/.gitkeep

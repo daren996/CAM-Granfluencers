@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+
+echo "pre-commit: running full test suite"
+python3 scripts/run_tests.py all
