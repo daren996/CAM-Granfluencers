@@ -35,7 +35,7 @@
           </p>
         </header>
 
-        <section class="panel">
+        <section class="section">
           <h2>为什么使用 TikHub</h2>
           <ul>
             <li>一个 API key 可以覆盖多个社交平台。</li>
@@ -44,7 +44,7 @@
           </ul>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>API key 配置</h2>
           <ol>
             <li>注册或登录 TikHub 账号。</li>
@@ -54,7 +54,7 @@
           <pre><code>TIKHUB_API_KEY=your_real_api_key</code></pre>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>采集架构</h2>
           <ul>
             <li><code>src/collect/</code>：client、采集接口、Instagram 实现、CLI 和导出逻辑。</li>
@@ -70,7 +70,7 @@
           </ul>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>本地运行方式</h2>
           <pre><code>python3 -m src.collect collect-account \
   --platform instagram \
@@ -88,7 +88,7 @@ python3 -m src.collect export-dashboard --input data/collect
 python3 -m src.collect sync-docs-data</code></pre>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>写入 <code>data/</code> 的内容</h2>
           <p>每次采集都会写入一个带时间戳的运行目录：</p>
           <pre><code>data/collect/&lt;platform&gt;/&lt;account-slug&gt;/&lt;run-id&gt;/</code></pre>
@@ -102,7 +102,7 @@ python3 -m src.collect sync-docs-data</code></pre>
           </ul>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>Dashboard 导出约定</h2>
           <p>导出器会把采集 bundle 转成供站点使用的静态 JSON，规范文件包括：</p>
           <ul>
@@ -118,7 +118,7 @@ python3 -m src.collect sync-docs-data</code></pre>
           </p>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>计费与限流说明</h2>
           <p>
             TikHub 采用按量付费。根据 2026 年 4 月 19 日公开页面，本项目使用的若干 Instagram
@@ -130,7 +130,7 @@ python3 -m src.collect sync-docs-data</code></pre>
           </ul>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>错误处理</h2>
           <ul>
             <li><code>401</code>：API key 缺失、无效或已过期。</li>

@@ -37,7 +37,7 @@
           </p>
         </header>
 
-        <section class="panel">
+        <section class="section">
           <h2>Why TikHub</h2>
           <ul>
             <li>One API key can cover multiple social platforms.</li>
@@ -46,7 +46,7 @@
           </ul>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>API key setup</h2>
           <ol>
             <li>Create or sign in to a TikHub account.</li>
@@ -56,7 +56,7 @@
           <pre><code>TIKHUB_API_KEY=your_real_api_key</code></pre>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>Collector architecture</h2>
           <ul>
             <li><code>src/collect/</code>: client, collector interfaces, Instagram implementation, CLI, and export logic.</li>
@@ -72,7 +72,7 @@
           </ul>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>Local usage</h2>
           <pre><code>python3 -m src.collect collect-account \
   --platform instagram \
@@ -90,7 +90,7 @@ python3 -m src.collect export-dashboard --input data/collect
 python3 -m src.collect sync-docs-data</code></pre>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>Data written to <code>data/</code></h2>
           <p>Each collection run writes into a timestamped run directory:</p>
           <pre><code>data/collect/&lt;platform&gt;/&lt;account-slug&gt;/&lt;run-id&gt;/</code></pre>
@@ -104,7 +104,7 @@ python3 -m src.collect sync-docs-data</code></pre>
           </ul>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>Dashboard export contract</h2>
           <p>
             The exporter transforms collected bundles into static JSON used by the site. The
@@ -123,7 +123,7 @@ python3 -m src.collect sync-docs-data</code></pre>
           </p>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>Cost and rate limit notes</h2>
           <p>
             TikHub uses pay-as-you-go pricing. Several Instagram endpoints referenced by this
@@ -136,7 +136,7 @@ python3 -m src.collect sync-docs-data</code></pre>
           </ul>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>Error handling</h2>
           <ul>
             <li><code>401</code>: missing, invalid, or expired API key.</li>

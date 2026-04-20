@@ -27,80 +27,108 @@
           <a class="nav-link" href="./setup.zh-CN.html">配置</a>
         </nav>
         <div class="sidebar-note">
-          <strong>以文档为先。</strong><code>docs/</code> 中的 HTML 站点是项目对外流程的规范来源。
-          如果代码与文档冲突，应优先修复代码或同步修正文档。
+          一个关注银发网红内容策略、媒介呈现与受众反应的计算传播研究项目。
         </div>
       </aside>
 
       <main class="content">
         <header class="page-header">
-          <p class="eyebrow">项目主页</p>
-          <h1>数字媒体中的老年网红</h1>
+          <p class="eyebrow">研究项目</p>
+          <h1>Granfluencers in Digital Media</h1>
           <p class="lede">
-            这是一个双语项目站点，用于组织关于老年社交媒体创作者的计算研究，包括内容策略、互动模式与受众回应。
+            本项目使用计算方法研究社交媒体上的银发网红，关注他们的内容、呈现方式与用户互动，并进一步分析其如何影响受众参与、感知与广告传播效果。
           </p>
         </header>
 
-        <section class="panel hero-grid">
-          <div>
-            <span class="kicker">站点定位</span>
-            <h2>一个主页，连接多条研究工作流</h2>
-            <p>
-              当前首页连接项目 Wiki、数据收集、分析页面和结果页面。每个页面都保留英文与中文两个版本，GitHub Pages
-              直接发布 <code>docs/</code> 中的 HTML 文件。
-            </p>
-            <p>
-              项目的规范数据目录位于 <code>data/dashboard/</code>，发布站点读取的是同步到
-              <code>docs/data/</code> 的镜像文件。
-            </p>
-          </div>
-          <div class="card">
-            <span class="kicker">快速入口</span>
-            <ul>
-              <li>用 <a href="./wiki.zh-CN.html">Wiki</a> 查看项目结构与规则。</li>
-              <li>用 <a href="./collect.zh-CN.html">收集</a> 页面管理 TikHub 工作流。</li>
-              <li>用 <a href="./analysis.zh-CN.html">分析</a> 页面查看已同步的数据。</li>
-              <li>用 <a href="./results.zh-CN.html">结果</a> 页面整理研究输出。</li>
-            </ul>
-          </div>
+        <section class="section">
+          <p class="section-label">快速入口</p>
+          <h2>从几个主要页面开始</h2>
+          <div></div>
         </section>
 
-        <section class="panel">
-          <span class="kicker">实时概览</span>
-          <h2>已发布的数据快照</h2>
-          <div class="summary-grid" data-site-summary data-lang="zh-CN"></div>
+        <section class="section">
+          <p class="section-label">项目目标</p>
+          <h2>理解银发网红如何影响数字传播</h2>
+          <p>
+            研究聚焦 Instagram 上的银发网红，关注老年创作者如何进行自我呈现、发布何种内容，以及用户如何对这些内容作出回应。项目希望把大规模社交媒体数据与传播、说服和平台可见性等问题连接起来。
+          </p>
+          <p>
+            通过结构化采集、多模态描述和计算分析，项目同时考察创作者行为与受众反应，并从内容特征、互动表现和商业化信号等多个维度展开分析。
+          </p>
+          <dl class="definition-list">
+            <div class="definition-row">
+              <dt>平台</dt>
+              <dd>Instagram 帖子、文案、图像、元数据与详细评论。</dd>
+            </div>
+            <div class="definition-row">
+              <dt>方法</dt>
+              <dd>NLP、主题模型、基于 LLM 的编码与大规模内容分析。</dd>
+            </div>
+            <div class="definition-row">
+              <dt>产出</dt>
+              <dd>流程文档、同步数据、分析视图以及可直接用于研究写作的发现。</dd>
+            </div>
+          </dl>
         </section>
 
-        <section class="card-grid">
-          <article class="card">
-            <span class="kicker">Wiki</span>
-            <h3>项目地图与规范</h3>
-            <p>这一页记录项目结构、文档优先规则和双语站点约定。</p>
-            <p><a href="./wiki.zh-CN.html">打开 Wiki</a></p>
-          </article>
-          <article class="card">
-            <span class="kicker">收集</span>
-            <h3>TikHub 数据采集流程</h3>
-            <p>这里说明 API 配置、采集存储结构，以及从 bundle 到站点数据的转换步骤。</p>
-            <p><a href="./collect.zh-CN.html">打开采集说明</a></p>
-          </article>
-          <article class="card">
-            <span class="kicker">分析</span>
-            <h3>HTML 化的数据视图</h3>
-            <p>查看同步后的 JSON 数据、最新帖子、标签统计和时间线概览。</p>
-            <p><a href="./analysis.zh-CN.html">打开分析页面</a></p>
-          </article>
-          <article class="card">
-            <span class="kicker">结果</span>
-            <h3>研究发现与输出</h3>
-            <p>在这里组织阶段性结果、论文写作材料和后续还需要补充的分析。</p>
-            <p><a href="./results.zh-CN.html">打开结果页面</a></p>
-          </article>
+        <section class="section">
+          <p class="section-label">研究范围</p>
+          <h2>核心维度</h2>
+          <ul class="link-list">
+            <li>
+              帖子、文案、话题标签、发布时间、点赞、评论、分享与创作者回复率。
+            </li>
+            <li>
+              图像细节，包括行为、颜色、物品、背景、身体暴露与面部表情。
+            </li>
+            <li>
+              广告相关指标，例如产品、品牌、商业内容以及广告帖比例。
+            </li>
+            <li>
+              银发网红画像，以及用于用户反应分析的详细评论数据。
+            </li>
+          </ul>
         </section>
 
-        <section class="panel">
-          <span class="kicker">工作流</span>
-          <h2>文档站如何连接仓库</h2>
+        <section class="section">
+          <p class="section-label">数据概览</p>
+          <h2>当前已发布摘要</h2>
+          <div data-site-summary data-lang="zh-CN"></div>
+        </section>
+
+        <section class="section">
+          <p class="section-label">研究流程</p>
+          <h2>从采集到解释</h2>
+          <ol>
+            <li>收集与银发网红及其 Instagram 帖子相关的大规模数据。</li>
+            <li>预处理文本、图像描述、元数据和互动记录。</li>
+            <li>使用计算方法对内容特征与媒介呈现进行编码和分析。</li>
+            <li>解释结果，形成分析、讨论与潜在结论。</li>
+          </ol>
+        </section>
+
+        <section class="section">
+          <p class="section-label">项目页面</p>
+          <h2>浏览研究工作流</h2>
+          <ul class="link-list">
+            <li>
+              <strong><a href="./wiki.zh-CN.html">Wiki</a></strong>：查看仓库结构、项目背景和双语站点规则。
+            </li>
+            <li>
+              <strong><a href="./collect.zh-CN.html">收集</a></strong>：管理平台配置、采集流程和导出步骤。
+            </li>
+            <li>
+              <strong><a href="./analysis.zh-CN.html">分析</a></strong>：查看计算编码、同步 dashboard 和特征分析。
+            </li>
+            <li>
+              <strong><a href="./results.zh-CN.html">结果</a></strong>：整理解释性发现、写作材料和阶段性输出。
+            </li>
+          </ul>
+        </section>
+
+        <section class="section">
+          <p class="section-label">本地工作流</p>
+          <h2>站点如何连接代码仓库</h2>
           <ol>
             <li>通过 <code>src/collect/</code> 完成账号数据采集与规范化。</li>
             <li>把规范数据导出到 <code>data/dashboard/</code>。</li>

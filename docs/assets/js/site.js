@@ -8,6 +8,7 @@
   const TEXT = {
     en: {
       updated: "Updated",
+      projectStatus: "Project status",
       statusReady: "Data ready",
       statusWaiting: "Waiting for data",
       accounts: "Accounts",
@@ -33,6 +34,7 @@
     },
     zh: {
       updated: "最近更新",
+      projectStatus: "项目状态",
       statusReady: "数据已就绪",
       statusWaiting: "等待数据",
       accounts: "账号数",
@@ -81,28 +83,34 @@
       summary.project_status === "ready_with_data" ? t.statusReady : t.statusWaiting;
 
     return `
-      <div class="metric-card">
-        <span class="${statusClass}">${statusText}</span>
-        <p class="footer-note">${t.updated}: ${escapeHtml(summary.updated_at || t.notAvailable)}</p>
-      </div>
-      <div class="metric-card">
-        <span class="kicker">${t.accounts}</span>
-        <p class="metric-value">${formatCount(counts.accounts)}</p>
-      </div>
-      <div class="metric-card">
-        <span class="kicker">${t.posts}</span>
-        <p class="metric-value">${formatCount(counts.posts)}</p>
-      </div>
-      <div class="metric-card">
-        <span class="kicker">${t.comments}</span>
-        <p class="metric-value">${formatCount(counts.comments)}</p>
-      </div>
-      <div class="metric-card">
-        <span class="kicker">${t.dateRange}</span>
-        <p class="muted">${escapeHtml(dateRange.start || t.notAvailable)} ${t.to} ${escapeHtml(
-          dateRange.end || t.notAvailable,
-        )}</p>
-      </div>
+      <dl class="summary-list">
+        <div class="summary-row">
+          <dt>${t.projectStatus}</dt>
+          <dd><span class="${statusClass}">${statusText}</span></dd>
+        </div>
+        <div class="summary-row">
+          <dt>${t.updated}</dt>
+          <dd>${escapeHtml(summary.updated_at || t.notAvailable)}</dd>
+        </div>
+        <div class="summary-row">
+          <dt>${t.accounts}</dt>
+          <dd><span class="metric-value">${formatCount(counts.accounts)}</span></dd>
+        </div>
+        <div class="summary-row">
+          <dt>${t.posts}</dt>
+          <dd><span class="metric-value">${formatCount(counts.posts)}</span></dd>
+        </div>
+        <div class="summary-row">
+          <dt>${t.comments}</dt>
+          <dd><span class="metric-value">${formatCount(counts.comments)}</span></dd>
+        </div>
+        <div class="summary-row">
+          <dt>${t.dateRange}</dt>
+          <dd>${escapeHtml(dateRange.start || t.notAvailable)} ${t.to} ${escapeHtml(
+            dateRange.end || t.notAvailable,
+          )}</dd>
+        </div>
+      </dl>
     `;
   }
 
@@ -190,12 +198,14 @@
     }
 
     return `
-      <ul class="pill-list">
+      <ul class="data-list">
         ${hashtags
           .slice(0, 12)
           .map(
             (item) =>
-              `<li>#${escapeHtml(item.hashtag)} <strong>${formatCount(item.post_count)}</strong></li>`,
+              `<li><span>#${escapeHtml(item.hashtag)}</span><strong>${formatCount(
+                item.post_count,
+              )}</strong></li>`,
           )
           .join("")}
       </ul>

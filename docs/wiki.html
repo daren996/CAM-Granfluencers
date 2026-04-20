@@ -36,34 +36,34 @@
           </p>
         </header>
 
-        <section class="panel">
+        <section class="section">
           <h2>Repository map</h2>
-          <div class="card-grid">
-            <article class="card">
-              <h3><code>docs/</code></h3>
-              <p>
+          <dl class="definition-list">
+            <div class="definition-row">
+              <dt><code>docs/</code></dt>
+              <dd>
                 Bilingual HTML site published through GitHub Pages. This is the source of truth for
                 project-facing workflows, page structure, and navigation.
-              </p>
-            </article>
-            <article class="card">
-              <h3><code>src/collect/</code></h3>
-              <p>
+              </dd>
+            </div>
+            <div class="definition-row">
+              <dt><code>src/collect/</code></dt>
+              <dd>
                 Python collection layer for TikHub access, normalization, export, and local data
                 preparation commands.
-              </p>
-            </article>
-            <article class="card">
-              <h3><code>data/</code></h3>
-              <p>
+              </dd>
+            </div>
+            <div class="definition-row">
+              <dt><code>data/</code></dt>
+              <dd>
                 Canonical local data storage. Raw collection runs live in <code>data/collect/</code>,
                 and dashboard-facing outputs live in <code>data/dashboard/</code>.
-              </p>
-            </article>
-          </div>
+              </dd>
+            </div>
+          </dl>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>Docs-first rules</h2>
           <ul>
             <li><code>docs/</code> is HTML-based. New docs pages should be added as HTML, not Markdown.</li>
@@ -74,7 +74,7 @@
           </ul>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>Data publication workflow</h2>
           <ol>
             <li>Run the collector into <code>data/collect/</code>.</li>
@@ -87,7 +87,7 @@ python3 -m src.collect export-dashboard --input data/collect
 python3 -m src.collect sync-docs-data</code></pre>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>Why HTML-based docs</h2>
           <p>
             Moving the site to HTML keeps the GitHub Pages output predictable and makes it easier to

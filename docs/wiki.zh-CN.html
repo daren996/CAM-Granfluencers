@@ -35,32 +35,32 @@
           </p>
         </header>
 
-        <section class="panel">
+        <section class="section">
           <h2>仓库结构</h2>
-          <div class="card-grid">
-            <article class="card">
-              <h3><code>docs/</code></h3>
-              <p>
+          <dl class="definition-list">
+            <div class="definition-row">
+              <dt><code>docs/</code></dt>
+              <dd>
                 由 GitHub Pages 发布的双语 HTML 站点。它是项目面向使用者的流程、导航和页面结构的规范来源。
-              </p>
-            </article>
-            <article class="card">
-              <h3><code>src/collect/</code></h3>
-              <p>
+              </dd>
+            </div>
+            <div class="definition-row">
+              <dt><code>src/collect/</code></dt>
+              <dd>
                 Python 数据采集层，负责 TikHub 访问、规范化处理、导出以及本地数据准备命令。
-              </p>
-            </article>
-            <article class="card">
-              <h3><code>data/</code></h3>
-              <p>
+              </dd>
+            </div>
+            <div class="definition-row">
+              <dt><code>data/</code></dt>
+              <dd>
                 项目的规范数据目录。原始采集运行保存在 <code>data/collect/</code>，面向站点的数据保存在
                 <code>data/dashboard/</code>。
-              </p>
-            </article>
-          </div>
+              </dd>
+            </div>
+          </dl>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>文档优先规则</h2>
           <ul>
             <li><code>docs/</code> 已经改成 HTML 站点，新文档页面应继续使用 HTML，而不是 Markdown。</li>
@@ -71,7 +71,7 @@
           </ul>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>数据发布流程</h2>
           <ol>
             <li>先把采集结果写入 <code>data/collect/</code>。</li>
@@ -84,7 +84,7 @@ python3 -m src.collect export-dashboard --input data/collect
 python3 -m src.collect sync-docs-data</code></pre>
         </section>
 
-        <section class="panel">
+        <section class="section">
           <h2>为什么改成 HTML</h2>
           <p>
             站点改成 HTML 后，GitHub Pages 的输出会更稳定，也更方便继续扩展导航栏、自定义布局、脚本逻辑，以及未来的
