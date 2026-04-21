@@ -1,5 +1,6 @@
 # macOS
 .DS_Store
+**/.DS_Store
 
 # Editors
 .idea/
@@ -44,6 +45,9 @@ build/
 dist/
 coverage/
 .cache/
+
+# Local collection runs and raw API snapshots
+data/collect/
 
 # Keep placeholder files for empty project folders
 !config/.gitkeep

@@ -82,8 +82,17 @@ class TikHubClient:
             attempt += 1
             result = self.transport("GET", url, self.auth_header, self.timeout)
             if 200 <= result.status_code < 300:
-                meta = self._build_request_meta(path, url, query, result.payload)
-                return result.payload, meta
+                embedded_error = self._embedded_error_result(result.payload)
+                if embedded_error is None:
+                    meta = self._build_request_meta(path, url, query, result.payload)
+                    return result.payload, meta
+
+                exc = self._error_from_result(embedded_error, url)
+                if not self._should_retry(embedded_error.status_code, attempt):
+                    raise exc
+
+                self.sleep(self.backoff_factor * (2 ** (attempt - 1)))
+                continue
 
             exc = self._error_from_result(result, url)
             if not self._should_retry(result.status_code, attempt):
@@ -149,6 +158,29 @@ class TikHubClient:
             "cache_message": payload.get("cache_message"),
             "cache_message_zh": payload.get("cache_message_zh"),
         }
+
+    def _embedded_error_result(self, payload: dict[str, Any]) -> TransportResult | None:
+        data = payload.get("data")
+        if not isinstance(data, dict):
+            return None
+
+        nested_code = data.get("code")
+        if isinstance(nested_code, str) and nested_code.isdigit():
+            nested_code = int(nested_code)
+        if not isinstance(nested_code, int):
+            return None
+        if 200 <= nested_code < 300:
+            return None
+
+        return TransportResult(
+            status_code=nested_code,
+            payload={
+                **data,
+                "upstream_request_id": payload.get("request_id"),
+                "upstream_router": payload.get("router"),
+                "upstream_docs": payload.get("docs"),
+            },
+        )
 
     def _default_transport(
         self,

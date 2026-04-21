@@ -76,8 +76,10 @@
 - 中文首页：[`docs/index.zh-CN.html`](./docs/index.zh-CN.html)
 - Wiki：[`docs/wiki.html`](./docs/wiki.html)
 - 中文 Wiki：[`docs/wiki.zh-CN.html`](./docs/wiki.zh-CN.html)
-- 采集指南：[`docs/collect.zh-CN.html`](./docs/collect.zh-CN.html)
-- Collection Guide：[`docs/collect.html`](./docs/collect.html)
+- 交互式收集页面：[`docs/collect.zh-CN.html`](./docs/collect.zh-CN.html)
+- Interactive Collect Page：[`docs/collect.html`](./docs/collect.html)
+- Wiki 数据采集子页：[`docs/wiki-collection.zh-CN.html`](./docs/wiki-collection.zh-CN.html)
+- Wiki Collection Chapter：[`docs/wiki-collection.html`](./docs/wiki-collection.html)
 - 分析页面：[`docs/analysis.html`](./docs/analysis.html)
 - 中文分析页面：[`docs/analysis.zh-CN.html`](./docs/analysis.zh-CN.html)
 - 结果页面：[`docs/results.html`](./docs/results.html)
@@ -87,6 +89,8 @@
 
 项目的规范数据目录位于 `data/dashboard/`。
 发布站点读取的是同步后的 `docs/data/` 镜像文件。
+`data/collect/` 下的原始采集数据现在按账号组织，包含 `account.json` 以及按条目拆分的
+`posts/*/item.json`、`reels/*/item.json`。每个 JSON 都会记录自己的提取时间戳，账号头像和条目媒体文件也会保存在对应目录下，包括单条视频以及轮播中的全部媒体资源。
 
 当采集代码或数据更新后，可以用下面的命令刷新站点数据：
 
@@ -100,6 +104,14 @@ python3 -m src.collect sync-docs-data
 ```bash
 make docs-data
 ```
+
+如果要打开可直接调用 Python 函数的本地交互式收集页面，可以运行：
+
+```bash
+python3 -m src.collect serve
+```
+
+然后访问 `http://127.0.0.1:8000/collect.zh-CN.html`。原来的采集说明文档已经迁移到 Wiki 子页 `docs/wiki-collection.zh-CN.html`。
 
 如果要把它发布成 GitHub 项目主页，最简单的做法是：
 
@@ -130,5 +142,7 @@ make docs-data
 如果要做真实的 TikHub 在线检查，可以运行：
 
 `python3 -m src.collect check`
+
+`python3 -m src.collect serve`
 
 CLI 会在本地存在 `.env` 时自动读取它，并使用其中的 `TIKHUB_API_KEY`；如果当前 shell 已经设置了同名环境变量，则优先使用 shell 中的值。

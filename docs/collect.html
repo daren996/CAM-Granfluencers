@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CAM Granfluencers | Collect</title>
     <link rel="stylesheet" href="./assets/css/site.css" />
+    <script defer src="./assets/js/collect.js"></script>
   </head>
   <body>
     <div class="page-shell">
@@ -24,126 +25,284 @@
           <a class="nav-link" href="./results.html">Results</a>
           <a class="nav-link" href="./setup.html">Setup</a>
         </nav>
+        <div class="sidebar-note">
+          This page is interactive only in local mode. Start <code>python3 -m src.collect serve</code>
+          and open the site from <code>http://127.0.0.1:8000/</code>.
+        </div>
       </aside>
 
-      <main class="content">
+      <main class="content" data-collect-app data-lang="en">
         <header class="page-header">
-          <p class="eyebrow">Collection</p>
-          <h1>TikHub collection guide</h1>
+          <p class="eyebrow">Collect</p>
+          <h1>Interactive local collection console</h1>
           <p class="lede">
-            The repository currently uses TikHub as the upstream provider for social media data. The
-            first implemented platform is Instagram, while the collector layer is designed to support
-            more platforms later.
+            This page is meant to run locally. It calls Python functions through the repository's
+            local collect API so you can collect an account, export dashboard data, and sync the
+            published docs copy without leaving the browser.
           </p>
         </header>
 
         <section class="section">
-          <h2>Why TikHub</h2>
-          <ul>
-            <li>One API key can cover multiple social platforms.</li>
-            <li>Instagram endpoints already cover profile lookup, post pagination, comments, replies, and search.</li>
-            <li>The repository keeps normalization, storage, export, and docs publication logic in-house.</li>
-          </ul>
+          <h2>Local mode</h2>
+          <div class="notice">
+            <p>
+              GitHub Pages is static, so it cannot call local Python directly. To use this page,
+              start the combined docs-and-API server from the repository root:
+            </p>
+            <details class="result-disclosure" open>
+              <summary class="result-disclosure-summary">
+                <span>Start command</span>
+                <span>Click to expand or collapse</span>
+              </summary>
+              <div class="result-panel result-panel-terminal is-compact">
+                <div class="terminal-header">
+                  <span>Start command</span>
+                  <span>local runner</span>
+                </div>
+                <pre><code>python3 -m src.collect serve</code></pre>
+              </div>
+            </details>
+            <p>
+              The original collection documentation now lives in the wiki chapter
+              <a href="./wiki-collection.html">Collection guide</a>.
+            </p>
+          </div>
+          <div class="button-row">
+            <button type="button" data-api-check>Check TikHub API key</button>
+          </div>
+          <div class="api-status" data-api-status data-state="idle"></div>
+          <details class="result-disclosure" data-api-output-toggle>
+            <summary class="result-disclosure-summary">
+              <span>Check output</span>
+              <span>Click to expand</span>
+            </summary>
+            <div class="result-panel result-panel-terminal">
+              <div class="terminal-header">
+                <span>Check output</span>
+                <span>local runner</span>
+              </div>
+              <pre><code data-api-output>{
+  "ok": true
+}</code></pre>
+            </div>
+          </details>
         </section>
 
         <section class="section">
-          <h2>API key setup</h2>
-          <ol>
-            <li>Create or sign in to a TikHub account.</li>
-            <li>Generate an API key from the TikHub dashboard.</li>
-            <li>Store it in the local <code>.env</code> file.</li>
-          </ol>
-          <pre><code>TIKHUB_API_KEY=your_real_api_key</code></pre>
+          <p class="section-label">Collect Account</p>
+          <h2>Run one account collection job</h2>
+          <form data-api-form="/api/collect-account">
+            <div class="form-grid">
+              <div class="field">
+                <label for="platform">Platform</label>
+                <select id="platform" name="platform">
+                  <option value="instagram">instagram</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="username">Username</label>
+                <input id="username" name="username" />
+              </div>
+              <div class="field">
+                <label for="user-id">User ID</label>
+                <input id="user-id" name="user_id" />
+              </div>
+              <div class="field">
+                <label for="max-posts">Max posts</label>
+                <input id="max-posts" name="max_posts" data-type="number" value="5" />
+              </div>
+              <div class="field">
+                <label for="max-comment-pages">Max comment pages</label>
+                <input
+                  id="max-comment-pages"
+                  name="max_comment_pages"
+                  data-type="number"
+                  value="2"
+                />
+              </div>
+              <div class="field">
+                <label for="page-size">Page size</label>
+                <input id="page-size" name="page_size" data-type="number" value="12" />
+              </div>
+              <div class="field is-wide">
+                <label class="checkbox-label" for="include-comments">
+                  <input id="include-comments" type="checkbox" name="include_comments" checked />
+                  Include comments and replies
+                </label>
+              </div>
+              <div class="field is-wide">
+                <label for="output-root">Output root</label>
+                <input id="output-root" name="output_root" value="data/collect" />
+              </div>
+            </div>
+            <div class="button-row">
+              <button type="submit">Collect account data</button>
+            </div>
+            <div class="api-status" data-form-status data-state="idle"></div>
+            <details class="result-disclosure" data-form-output-toggle>
+              <summary class="result-disclosure-summary">
+                <span>Live output</span>
+                <span>Click to expand</span>
+              </summary>
+              <div class="result-panel result-panel-terminal">
+                <div class="terminal-header">
+                  <span>Live output</span>
+                  <span>local runner</span>
+                </div>
+                <pre><code data-form-output></code></pre>
+              </div>
+            </details>
+          </form>
         </section>
 
         <section class="section">
-          <h2>Collector architecture</h2>
-          <ul>
-            <li><code>src/collect/</code>: client, collector interfaces, Instagram implementation, CLI, and export logic.</li>
-            <li><code>data/collect/</code>: raw API snapshots and normalized bundle output.</li>
-            <li><code>data/dashboard/</code>: canonical dashboard-facing JSON.</li>
-            <li><code>docs/data/</code>: published mirror used by the HTML site.</li>
-          </ul>
-          <p>The public CLI entrypoints are:</p>
-          <ul>
-            <li><code>python3 -m src.collect collect-account ...</code></li>
-            <li><code>python3 -m src.collect export-dashboard --input data/collect</code></li>
-            <li><code>python3 -m src.collect sync-docs-data</code></li>
-          </ul>
+          <p class="section-label">Export Dashboard</p>
+          <h2>Build site-facing JSON files</h2>
+          <form data-api-form="/api/export-dashboard">
+            <div class="form-grid">
+              <div class="field">
+                <label for="export-input">Input path</label>
+                <input id="export-input" name="input" value="data/collect" />
+              </div>
+              <div class="field">
+                <label for="export-output">Output directory</label>
+                <input id="export-output" name="output_dir" value="data/dashboard" />
+              </div>
+            </div>
+            <div class="button-row">
+              <button type="submit">Export dashboard data</button>
+            </div>
+            <div class="api-status" data-form-status data-state="idle"></div>
+            <details class="result-disclosure" data-form-output-toggle>
+              <summary class="result-disclosure-summary">
+                <span>Command output</span>
+                <span>Click to expand</span>
+              </summary>
+              <div class="result-panel result-panel-terminal">
+                <div class="terminal-header">
+                  <span>Command output</span>
+                  <span>local runner</span>
+                </div>
+                <pre><code data-form-output></code></pre>
+              </div>
+            </details>
+          </form>
         </section>
 
         <section class="section">
-          <h2>Local usage</h2>
-          <pre><code>python3 -m src.collect collect-account \
-  --platform instagram \
-  --username nasa \
-  --max-posts 5
-
-python3 -m src.collect collect-account \
-  --platform instagram \
-  --username nasa \
-  --include-comments \
-  --max-posts 3 \
-  --max-comment-pages 2
-
-python3 -m src.collect export-dashboard --input data/collect
-python3 -m src.collect sync-docs-data</code></pre>
+          <p class="section-label">Sync Docs</p>
+          <h2>Refresh the published site data mirror</h2>
+          <form data-api-form="/api/sync-docs-data">
+            <div class="form-grid">
+              <div class="field">
+                <label for="source-dir">Source directory</label>
+                <input id="source-dir" name="source_dir" value="data/dashboard" />
+              </div>
+              <div class="field">
+                <label for="docs-dir">Docs data directory</label>
+                <input id="docs-dir" name="docs_dir" value="docs/data" />
+              </div>
+            </div>
+            <div class="button-row">
+              <button type="submit">Sync docs data</button>
+            </div>
+            <div class="api-status" data-form-status data-state="idle"></div>
+            <details class="result-disclosure" data-form-output-toggle>
+              <summary class="result-disclosure-summary">
+                <span>Command output</span>
+                <span>Click to expand</span>
+              </summary>
+              <div class="result-panel result-panel-terminal">
+                <div class="terminal-header">
+                  <span>Command output</span>
+                  <span>local runner</span>
+                </div>
+                <pre><code data-form-output></code></pre>
+              </div>
+            </details>
+          </form>
         </section>
 
         <section class="section">
-          <h2>Data written to <code>data/</code></h2>
-          <p>Each collection run writes into a timestamped run directory:</p>
-          <pre><code>data/collect/&lt;platform&gt;/&lt;account-slug&gt;/&lt;run-id&gt;/</code></pre>
-          <ul>
-            <li><code>bundle.json</code>: normalized profile, posts, comments, replies, and request metadata.</li>
-            <li><code>raw/account/profile.json</code>: raw profile response.</li>
-            <li><code>raw/account_posts/*.json</code>: raw post page responses.</li>
-            <li><code>raw/post_detail/*.json</code>: raw post detail responses.</li>
-            <li><code>raw/comments/*.json</code>: raw comment page responses.</li>
-            <li><code>raw/replies/*.json</code>: raw reply page responses.</li>
-          </ul>
-        </section>
-
-        <section class="section">
-          <h2>Dashboard export contract</h2>
-          <p>
-            The exporter transforms collected bundles into static JSON used by the site. The
-            canonical files are:
-          </p>
-          <ul>
-            <li><code>data/dashboard/site-summary.json</code></li>
-            <li><code>data/dashboard/accounts.json</code></li>
-            <li><code>data/dashboard/posts.json</code></li>
-            <li><code>data/dashboard/hashtags.json</code></li>
-            <li><code>data/dashboard/engagement-timeseries.json</code></li>
-          </ul>
-          <p>
-            The <code>sync-docs-data</code> command copies those files into <code>docs/data/</code>
-            for GitHub Pages publishing.
-          </p>
-        </section>
-
-        <section class="section">
-          <h2>Cost and rate limit notes</h2>
-          <p>
-            TikHub uses pay-as-you-go pricing. Several Instagram endpoints referenced by this
-            project were documented at <code>0.002 USD/request</code> on April 19, 2026, but pricing
-            can change. Re-check before large runs.
-          </p>
-          <ul>
-            <li><a href="https://tikhub.io/pricing">TikHub pricing</a></li>
-            <li><a href="https://docs.tikhub.io/">TikHub docs</a></li>
-          </ul>
-        </section>
-
-        <section class="section">
-          <h2>Error handling</h2>
-          <ul>
-            <li><code>401</code>: missing, invalid, or expired API key.</li>
-            <li><code>402</code>: insufficient balance for a paid endpoint.</li>
-            <li><code>429</code>: rate limit hit; the client retries with backoff.</li>
-            <li><code>5xx</code>: transient upstream failures are retried automatically.</li>
-          </ul>
+          <p class="section-label">Clear Results</p>
+          <h2>Remove matching collected data and rebuild exports</h2>
+          <div class="notice">
+            <p>
+              This action deletes matching account trees under <code>data/collect</code> or any
+              matching legacy run directories, then
+              rebuilds <code>data/dashboard</code> and syncs <code>docs/data</code>.
+            </p>
+            <p>
+              For safety, provide at least one identifier such as username, user ID, account ID,
+              or a legacy run ID. To wipe all results for a platform, explicitly enable the
+              confirmation checkbox below.
+            </p>
+          </div>
+          <form data-api-form="/api/clear-results">
+            <div class="form-grid">
+              <div class="field">
+                <label for="clear-platform">Platform</label>
+                <select id="clear-platform" name="platform">
+                  <option value="instagram">instagram</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="clear-username">Username</label>
+                <input id="clear-username" name="username" />
+              </div>
+              <div class="field">
+                <label for="clear-user-id">User ID</label>
+                <input id="clear-user-id" name="user_id" />
+              </div>
+              <div class="field">
+                <label for="clear-account-id">Account ID</label>
+                <input id="clear-account-id" name="account_id" />
+              </div>
+              <div class="field">
+                <label for="clear-run-id">Legacy Run ID</label>
+                <input id="clear-run-id" name="run_id" />
+              </div>
+              <div class="field is-wide">
+                <label class="checkbox-label" for="clear-all-on-platform">
+                  <input
+                    id="clear-all-on-platform"
+                    type="checkbox"
+                    name="clear_all_on_platform"
+                  />
+                  Allow clearing all collected results for this platform
+                </label>
+              </div>
+              <div class="field">
+                <label for="clear-collect-root">Collect root</label>
+                <input id="clear-collect-root" name="collect_root" value="data/collect" />
+              </div>
+              <div class="field">
+                <label for="clear-dashboard-dir">Dashboard directory</label>
+                <input id="clear-dashboard-dir" name="dashboard_dir" value="data/dashboard" />
+              </div>
+              <div class="field">
+                <label for="clear-docs-dir">Docs data directory</label>
+                <input id="clear-docs-dir" name="docs_dir" value="docs/data" />
+              </div>
+            </div>
+            <div class="button-row">
+              <button type="submit">Clear matching results</button>
+            </div>
+            <div class="api-status" data-form-status data-state="idle"></div>
+            <details class="result-disclosure" data-form-output-toggle>
+              <summary class="result-disclosure-summary">
+                <span>Command output</span>
+                <span>Click to expand</span>
+              </summary>
+              <div class="result-panel result-panel-terminal">
+                <div class="terminal-header">
+                  <span>Command output</span>
+                  <span>local runner</span>
+                </div>
+                <pre><code data-form-output></code></pre>
+              </div>
+            </details>
+          </form>
         </section>
       </main>
     </div>

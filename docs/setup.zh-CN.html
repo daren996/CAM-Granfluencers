@@ -68,6 +68,18 @@ make docs-data</code></pre>
         </section>
 
         <section class="section">
+          <h2>交互式本地收集页面</h2>
+          <p>
+            顶层的 <a href="./collect.zh-CN.html">收集</a> 页面现在是本地交互控制台。要使用它，请先同时启动 docs 站点和本地 API：
+          </p>
+          <pre><code>python3 -m src.collect serve</code></pre>
+          <p>
+            然后打开 <code>http://127.0.0.1:8000/collect.zh-CN.html</code>。原来的采集说明文档已经迁移到
+            Wiki 子页 <a href="./wiki-collection.zh-CN.html">数据采集指南</a>。
+          </p>
+        </section>
+
+        <section class="section">
           <h2>重要说明</h2>
           <ul>
             <li>文档站已经改成 HTML，因此页面结构、样式和脚本都直接维护在 <code>docs/</code> 内。</li>

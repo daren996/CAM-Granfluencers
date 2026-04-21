@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CAM Granfluencers | 收集</title>
     <link rel="stylesheet" href="./assets/css/site.css" />
+    <script defer src="./assets/js/collect.js"></script>
   </head>
   <body>
     <div class="page-shell">
@@ -24,120 +25,279 @@
           <a class="nav-link" href="./results.zh-CN.html">结果</a>
           <a class="nav-link" href="./setup.zh-CN.html">配置</a>
         </nav>
+        <div class="sidebar-note">
+          这个页面只在本地交互模式下可用。请运行 <code>python3 -m src.collect serve</code>，
+          并通过 <code>http://127.0.0.1:8000/</code> 打开站点。
+        </div>
       </aside>
 
-      <main class="content">
+      <main class="content" data-collect-app data-lang="zh">
         <header class="page-header">
           <p class="eyebrow">收集</p>
-          <h1>TikHub 数据采集指南</h1>
+          <h1>本地交互式采集控制台</h1>
           <p class="lede">
-            当前仓库使用 TikHub 作为上游社交媒体数据提供方。第一批已实现的平台是 Instagram，但采集层已经按可扩展方式设计，后续可以继续接入更多平台。
+            这个页面用于本地运行。它会通过仓库自带的本地采集 API 调用 Python 函数，让你直接在浏览器里完成账号采集、dashboard 导出和站点数据同步。
           </p>
         </header>
 
         <section class="section">
-          <h2>为什么使用 TikHub</h2>
-          <ul>
-            <li>一个 API key 可以覆盖多个社交平台。</li>
-            <li>Instagram 相关接口已经覆盖资料、帖子分页、评论、回复和搜索。</li>
-            <li>规范化、存储、导出和文档发布逻辑仍然由仓库自己维护。</li>
-          </ul>
+          <h2>本地模式</h2>
+          <div class="notice">
+            <p>
+              GitHub Pages 是静态站点，不能直接调用本地 Python。要使用这个页面，请先在仓库根目录运行：
+            </p>
+            <details class="result-disclosure" open>
+              <summary class="result-disclosure-summary">
+                <span>启动命令</span>
+                <span>点击展开或折叠</span>
+              </summary>
+              <div class="result-panel result-panel-terminal is-compact">
+                <div class="terminal-header">
+                  <span>启动命令</span>
+                  <span>local runner</span>
+                </div>
+                <pre><code>python3 -m src.collect serve</code></pre>
+              </div>
+            </details>
+            <p>
+              原来的采集说明文档已经迁移到 Wiki 子页
+              <a href="./wiki-collection.zh-CN.html">数据采集指南</a>。
+            </p>
+          </div>
+          <div class="button-row">
+            <button type="button" data-api-check>检查 TikHub API key</button>
+          </div>
+          <div class="api-status" data-api-status data-state="idle"></div>
+          <details class="result-disclosure" data-api-output-toggle>
+            <summary class="result-disclosure-summary">
+              <span>检查输出</span>
+              <span>点击展开查看</span>
+            </summary>
+            <div class="result-panel result-panel-terminal">
+              <div class="terminal-header">
+                <span>检查输出</span>
+                <span>local runner</span>
+              </div>
+              <pre><code data-api-output>{
+  "ok": true
+}</code></pre>
+            </div>
+          </details>
         </section>
 
         <section class="section">
-          <h2>API key 配置</h2>
-          <ol>
-            <li>注册或登录 TikHub 账号。</li>
-            <li>在 TikHub dashboard 中生成 API key。</li>
-            <li>把 key 写入本地 <code>.env</code>。</li>
-          </ol>
-          <pre><code>TIKHUB_API_KEY=your_real_api_key</code></pre>
+          <p class="section-label">采集账号</p>
+          <h2>执行一次账号采集任务</h2>
+          <form data-api-form="/api/collect-account">
+            <div class="form-grid">
+              <div class="field">
+                <label for="platform">平台</label>
+                <select id="platform" name="platform">
+                  <option value="instagram">instagram</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="username">用户名</label>
+                <input id="username" name="username" />
+              </div>
+              <div class="field">
+                <label for="user-id">用户 ID</label>
+                <input id="user-id" name="user_id" />
+              </div>
+              <div class="field">
+                <label for="max-posts">最大帖子数</label>
+                <input id="max-posts" name="max_posts" data-type="number" value="5" />
+              </div>
+              <div class="field">
+                <label for="max-comment-pages">最大评论页数</label>
+                <input
+                  id="max-comment-pages"
+                  name="max_comment_pages"
+                  data-type="number"
+                  value="2"
+                />
+              </div>
+              <div class="field">
+                <label for="page-size">分页大小</label>
+                <input id="page-size" name="page_size" data-type="number" value="12" />
+              </div>
+              <div class="field is-wide">
+                <label class="checkbox-label" for="include-comments">
+                  <input id="include-comments" type="checkbox" name="include_comments" checked />
+                  同时采集评论与回复
+                </label>
+              </div>
+              <div class="field is-wide">
+                <label for="output-root">输出目录根路径</label>
+                <input id="output-root" name="output_root" value="data/collect" />
+              </div>
+            </div>
+            <div class="button-row">
+              <button type="submit">开始采集账号数据</button>
+            </div>
+            <div class="api-status" data-form-status data-state="idle"></div>
+            <details class="result-disclosure" data-form-output-toggle>
+              <summary class="result-disclosure-summary">
+                <span>实时输出</span>
+                <span>点击展开查看</span>
+              </summary>
+              <div class="result-panel result-panel-terminal">
+                <div class="terminal-header">
+                  <span>实时输出</span>
+                  <span>local runner</span>
+                </div>
+                <pre><code data-form-output></code></pre>
+              </div>
+            </details>
+          </form>
         </section>
 
         <section class="section">
-          <h2>采集架构</h2>
-          <ul>
-            <li><code>src/collect/</code>：client、采集接口、Instagram 实现、CLI 和导出逻辑。</li>
-            <li><code>data/collect/</code>：原始 API 快照与规范化后的 bundle。</li>
-            <li><code>data/dashboard/</code>：规范的 dashboard JSON 数据。</li>
-            <li><code>docs/data/</code>：发布站点使用的镜像副本。</li>
-          </ul>
-          <p>当前主要命令入口包括：</p>
-          <ul>
-            <li><code>python3 -m src.collect collect-account ...</code></li>
-            <li><code>python3 -m src.collect export-dashboard --input data/collect</code></li>
-            <li><code>python3 -m src.collect sync-docs-data</code></li>
-          </ul>
+          <p class="section-label">导出 Dashboard</p>
+          <h2>生成站点使用的 JSON 文件</h2>
+          <form data-api-form="/api/export-dashboard">
+            <div class="form-grid">
+              <div class="field">
+                <label for="export-input">输入路径</label>
+                <input id="export-input" name="input" value="data/collect" />
+              </div>
+              <div class="field">
+                <label for="export-output">输出目录</label>
+                <input id="export-output" name="output_dir" value="data/dashboard" />
+              </div>
+            </div>
+            <div class="button-row">
+              <button type="submit">导出 dashboard 数据</button>
+            </div>
+            <div class="api-status" data-form-status data-state="idle"></div>
+            <details class="result-disclosure" data-form-output-toggle>
+              <summary class="result-disclosure-summary">
+                <span>执行输出</span>
+                <span>点击展开查看</span>
+              </summary>
+              <div class="result-panel result-panel-terminal">
+                <div class="terminal-header">
+                  <span>执行输出</span>
+                  <span>local runner</span>
+                </div>
+                <pre><code data-form-output></code></pre>
+              </div>
+            </details>
+          </form>
         </section>
 
         <section class="section">
-          <h2>本地运行方式</h2>
-          <pre><code>python3 -m src.collect collect-account \
-  --platform instagram \
-  --username nasa \
-  --max-posts 5
-
-python3 -m src.collect collect-account \
-  --platform instagram \
-  --username nasa \
-  --include-comments \
-  --max-posts 3 \
-  --max-comment-pages 2
-
-python3 -m src.collect export-dashboard --input data/collect
-python3 -m src.collect sync-docs-data</code></pre>
+          <p class="section-label">同步 Docs</p>
+          <h2>刷新发布站点的数据镜像</h2>
+          <form data-api-form="/api/sync-docs-data">
+            <div class="form-grid">
+              <div class="field">
+                <label for="source-dir">源目录</label>
+                <input id="source-dir" name="source_dir" value="data/dashboard" />
+              </div>
+              <div class="field">
+                <label for="docs-dir">Docs 数据目录</label>
+                <input id="docs-dir" name="docs_dir" value="docs/data" />
+              </div>
+            </div>
+            <div class="button-row">
+              <button type="submit">同步 docs 数据</button>
+            </div>
+            <div class="api-status" data-form-status data-state="idle"></div>
+            <details class="result-disclosure" data-form-output-toggle>
+              <summary class="result-disclosure-summary">
+                <span>执行输出</span>
+                <span>点击展开查看</span>
+              </summary>
+              <div class="result-panel result-panel-terminal">
+                <div class="terminal-header">
+                  <span>执行输出</span>
+                  <span>local runner</span>
+                </div>
+                <pre><code data-form-output></code></pre>
+              </div>
+            </details>
+          </form>
         </section>
 
         <section class="section">
-          <h2>写入 <code>data/</code> 的内容</h2>
-          <p>每次采集都会写入一个带时间戳的运行目录：</p>
-          <pre><code>data/collect/&lt;platform&gt;/&lt;account-slug&gt;/&lt;run-id&gt;/</code></pre>
-          <ul>
-            <li><code>bundle.json</code>：规范化后的 profile、posts、comments、replies 与请求元数据。</li>
-            <li><code>raw/account/profile.json</code>：账号资料原始返回。</li>
-            <li><code>raw/account_posts/*.json</code>：帖子分页原始返回。</li>
-            <li><code>raw/post_detail/*.json</code>：帖子详情原始返回。</li>
-            <li><code>raw/comments/*.json</code>：评论分页原始返回。</li>
-            <li><code>raw/replies/*.json</code>：回复分页原始返回。</li>
-          </ul>
-        </section>
-
-        <section class="section">
-          <h2>Dashboard 导出约定</h2>
-          <p>导出器会把采集 bundle 转成供站点使用的静态 JSON，规范文件包括：</p>
-          <ul>
-            <li><code>data/dashboard/site-summary.json</code></li>
-            <li><code>data/dashboard/accounts.json</code></li>
-            <li><code>data/dashboard/posts.json</code></li>
-            <li><code>data/dashboard/hashtags.json</code></li>
-            <li><code>data/dashboard/engagement-timeseries.json</code></li>
-          </ul>
-          <p>
-            随后的 <code>sync-docs-data</code> 命令会把这些文件复制到 <code>docs/data/</code>，
-            供 GitHub Pages 发布后的 HTML 页面读取。
-          </p>
-        </section>
-
-        <section class="section">
-          <h2>计费与限流说明</h2>
-          <p>
-            TikHub 采用按量付费。根据 2026 年 4 月 19 日公开页面，本项目使用的若干 Instagram
-            接口标注为 <code>0.002 USD/request</code>，但价格随时可能变化，正式大规模采集前应重新确认。
-          </p>
-          <ul>
-            <li><a href="https://tikhub.io/pricing">TikHub pricing</a></li>
-            <li><a href="https://docs.tikhub.io/">TikHub docs</a></li>
-          </ul>
-        </section>
-
-        <section class="section">
-          <h2>错误处理</h2>
-          <ul>
-            <li><code>401</code>：API key 缺失、无效或已过期。</li>
-            <li><code>402</code>：余额不足，无法访问付费接口。</li>
-            <li><code>429</code>：达到限流阈值，client 会执行退避重试。</li>
-            <li><code>5xx</code>：上游临时故障会自动重试。</li>
-          </ul>
+          <p class="section-label">清除结果</p>
+          <h2>删除匹配采集结果并重建导出数据</h2>
+          <div class="notice">
+            <p>
+              这个动作会删除 <code>data/collect</code> 下匹配的账号目录，或者匹配到的旧版
+              run 目录，然后重建 <code>data/dashboard</code>，再同步到 <code>docs/data</code>。
+            </p>
+            <p>
+              为了避免误删，默认请至少填写一个标识参数，例如用户名、用户 ID、账号 ID 或
+              旧版 run ID。如果确实要清空某个平台的全部采集结果，请手动勾选下面的确认项。
+            </p>
+          </div>
+          <form data-api-form="/api/clear-results">
+            <div class="form-grid">
+              <div class="field">
+                <label for="clear-platform">平台</label>
+                <select id="clear-platform" name="platform">
+                  <option value="instagram">instagram</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="clear-username">用户名</label>
+                <input id="clear-username" name="username" />
+              </div>
+              <div class="field">
+                <label for="clear-user-id">用户 ID</label>
+                <input id="clear-user-id" name="user_id" />
+              </div>
+              <div class="field">
+                <label for="clear-account-id">账号 ID</label>
+                <input id="clear-account-id" name="account_id" />
+              </div>
+              <div class="field">
+                <label for="clear-run-id">旧版 Run ID</label>
+                <input id="clear-run-id" name="run_id" />
+              </div>
+              <div class="field is-wide">
+                <label class="checkbox-label" for="clear-all-on-platform">
+                  <input
+                    id="clear-all-on-platform"
+                    type="checkbox"
+                    name="clear_all_on_platform"
+                  />
+                  允许清除该平台下的全部采集结果
+                </label>
+              </div>
+              <div class="field">
+                <label for="clear-collect-root">采集根目录</label>
+                <input id="clear-collect-root" name="collect_root" value="data/collect" />
+              </div>
+              <div class="field">
+                <label for="clear-dashboard-dir">Dashboard 目录</label>
+                <input id="clear-dashboard-dir" name="dashboard_dir" value="data/dashboard" />
+              </div>
+              <div class="field">
+                <label for="clear-docs-dir">Docs 数据目录</label>
+                <input id="clear-docs-dir" name="docs_dir" value="docs/data" />
+              </div>
+            </div>
+            <div class="button-row">
+              <button type="submit">清除匹配结果</button>
+            </div>
+            <div class="api-status" data-form-status data-state="idle"></div>
+            <details class="result-disclosure" data-form-output-toggle>
+              <summary class="result-disclosure-summary">
+                <span>执行输出</span>
+                <span>点击展开查看</span>
+              </summary>
+              <div class="result-panel result-panel-terminal">
+                <div class="terminal-header">
+                  <span>执行输出</span>
+                  <span>local runner</span>
+                </div>
+                <pre><code data-form-output></code></pre>
+              </div>
+            </details>
+          </form>
         </section>
       </main>
     </div>

@@ -78,8 +78,10 @@ Files in `docs/` are the source of truth for user-facing behavior and should be 
 - Chinese homepage: [`docs/index.zh-CN.html`](./docs/index.zh-CN.html)
 - Wiki: [`docs/wiki.html`](./docs/wiki.html)
 - Chinese wiki: [`docs/wiki.zh-CN.html`](./docs/wiki.zh-CN.html)
-- Collection guide: [`docs/collect.html`](./docs/collect.html)
-- Chinese collection guide: [`docs/collect.zh-CN.html`](./docs/collect.zh-CN.html)
+- Interactive collect page: [`docs/collect.html`](./docs/collect.html)
+- Chinese interactive collect page: [`docs/collect.zh-CN.html`](./docs/collect.zh-CN.html)
+- Wiki collection chapter: [`docs/wiki-collection.html`](./docs/wiki-collection.html)
+- Chinese wiki collection chapter: [`docs/wiki-collection.zh-CN.html`](./docs/wiki-collection.zh-CN.html)
 - Analysis page: [`docs/analysis.html`](./docs/analysis.html)
 - Chinese analysis page: [`docs/analysis.zh-CN.html`](./docs/analysis.zh-CN.html)
 - Results page: [`docs/results.html`](./docs/results.html)
@@ -89,6 +91,10 @@ Files in `docs/` are the source of truth for user-facing behavior and should be 
 
 Canonical dashboard data lives under `data/dashboard/`.
 The published site reads a synchronized copy under `docs/data/`.
+Raw collection data under `data/collect/` is organized by account, with `account.json` plus per-item
+`posts/*/item.json` and `reels/*/item.json` files. Each JSON stores its own extraction timestamp, and
+downloaded profile and item media are saved alongside those records, including single videos and
+all assets from mixed carousels.
 
 To refresh site data after running the collector:
 
@@ -102,6 +108,14 @@ Or use the combined helper:
 ```bash
 make docs-data
 ```
+
+To open the interactive local collect page that calls Python functions directly, run:
+
+```bash
+python3 -m src.collect serve
+```
+
+Then open `http://127.0.0.1:8000/collect.html`. The older collection documentation now lives in the wiki chapter `docs/wiki-collection.html`.
 
 To publish it as the project website on GitHub:
 
@@ -131,5 +145,7 @@ The same suites are also available through:
 For a live TikHub connectivity check, run:
 
 `python3 -m src.collect check`
+
+`python3 -m src.collect serve`
 
 The CLI automatically loads the repository `.env` when present and uses `TIKHUB_API_KEY` from there unless the variable is already set in your shell.

@@ -1,13 +1,17 @@
 from __future__ import annotations
 
+from difflib import SequenceMatcher
 from typing import Any
 
 from ..base import BaseCollector
 from ..client import TikHubClient
+from ..exceptions import TikHubError
 from ..models import AccountRef, Cursor, PageEnvelope, PostRef, RecordEnvelope
 from ..normalization import (
     extract_hashtags,
     first_image_url,
+    image_urls,
+    media_assets,
     media_type_name,
     timestamp_to_iso8601,
     video_urls,
@@ -23,9 +27,16 @@ class InstagramCollector(BaseCollector):
         self.client = client
 
     def fetch_account_profile(self, account_ref: AccountRef) -> RecordEnvelope:
-        payload, meta = self.client.get(
-            "/api/v1/instagram/v3/get_user_profile", account_ref.to_params()
-        )
+        try:
+            payload, meta = self.client.get(
+                "/api/v1/instagram/v3/get_user_profile", account_ref.to_params()
+            )
+        except TikHubError as exc:
+            fallback = self._retry_profile_lookup_with_search(account_ref, exc)
+            if fallback is None:
+                raise
+            payload, meta = fallback
+
         user = (payload.get("data") or {}).get("user") or {}
         return RecordEnvelope(
             record=self._normalize_profile(user, meta),
@@ -155,17 +166,21 @@ class InstagramCollector(BaseCollector):
         caption = self._extract_caption(node)
         code = node.get("code")
         author = node.get("user") or {}
+        item_type = self._item_type(node)
         return {
             "platform": self.platform,
             "post_id": self._stringify(node.get("id")),
             "code": code,
-            "url": self._post_url(code),
+            "url": self._post_url(code, item_type),
+            "item_type": item_type,
             "caption": caption,
             "hashtags": extract_hashtags(caption),
             "media_type": media_type_name(node.get("media_type")),
             "taken_at": timestamp_to_iso8601(node.get("taken_at")),
             "thumbnail_url": first_image_url(node),
+            "image_urls": image_urls(node),
             "video_urls": video_urls(node),
+            "media_assets": media_assets(node),
             "metrics": {
                 "likes": node.get("like_count"),
                 "comments": node.get("comment_count"),
@@ -180,6 +195,7 @@ class InstagramCollector(BaseCollector):
                 "post_id": self._stringify(node.get("id")),
                 "code": code,
                 "media_type": node.get("media_type"),
+                "product_type": node.get("product_type"),
             },
             "request_meta": request_meta,
         }
@@ -248,12 +264,95 @@ class InstagramCollector(BaseCollector):
             return None
         return int(count)
 
-    def _post_url(self, code: str | None) -> str | None:
+    def _post_url(self, code: str | None, item_type: str = "post") -> str | None:
         if not code:
             return None
+        if item_type == "reel":
+            return f"https://www.instagram.com/reel/{code}/"
         return f"https://www.instagram.com/p/{code}/"
+
+    def _item_type(self, node: dict[str, Any]) -> str:
+        product_type = str(node.get("product_type") or "").lower()
+        if product_type in {"clips", "igtv", "reels"}:
+            return "reel"
+        if media_type_name(node.get("media_type")) == "video":
+            return "reel"
+        return "post"
 
     def _stringify(self, value: Any) -> str | None:
         if value in (None, ""):
             return None
         return str(value)
+
+    def _retry_profile_lookup_with_search(
+        self, account_ref: AccountRef, original_error: TikHubError
+    ) -> tuple[dict[str, Any], dict[str, Any]] | None:
+        if original_error.status_code != 400 or not account_ref.username:
+            return None
+
+        try:
+            search_payload, search_meta = self.client.get(
+                "/api/v1/instagram/v3/search_users", {"query": account_ref.username}
+            )
+        except TikHubError:
+            return None
+
+        candidates = (search_payload.get("data") or {}).get("users") or []
+        for candidate in self._rank_search_candidates(account_ref.username, candidates):
+            candidate_user = candidate.get("user") or candidate
+            candidate_id = self._stringify(candidate_user.get("pk") or candidate_user.get("id"))
+            candidate_username = candidate_user.get("username")
+            if not candidate_id and not candidate_username:
+                continue
+
+            params: dict[str, Any]
+            if candidate_id:
+                params = {"user_id": candidate_id}
+            else:
+                params = {"username": candidate_username}
+
+            try:
+                payload, meta = self.client.get("/api/v1/instagram/v3/get_user_profile", params)
+            except TikHubError:
+                continue
+
+            return payload, {
+                **meta,
+                "fallback_from": account_ref.to_params(),
+                "failed_profile_lookup": {
+                    "error": str(original_error),
+                    "status_code": original_error.status_code,
+                    "url": original_error.url,
+                    "payload": original_error.payload,
+                },
+                "search_meta": search_meta,
+                "resolved_account": {
+                    "username": candidate_username,
+                    "user_id": candidate_id,
+                },
+            }
+
+        return None
+
+    def _rank_search_candidates(
+        self, requested_username: str, candidates: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
+        target = requested_username.casefold()
+        target_alnum = self._alnum_key(requested_username)
+
+        def score(candidate: dict[str, Any]) -> tuple[int, int, float, int]:
+            user_data = candidate.get("user") or candidate
+            username = str(user_data.get("username") or "")
+            username_key = username.casefold()
+            username_alnum = self._alnum_key(username)
+
+            exact_match = 1 if username_key == target else 0
+            normalized_match = 1 if target_alnum and username_alnum == target_alnum else 0
+            similarity = SequenceMatcher(None, target, username_key).ratio()
+            position = int(candidate.get("position") or 0)
+            return (exact_match, normalized_match, similarity, -position)
+
+        return sorted(candidates, key=score, reverse=True)
+
+    def _alnum_key(self, value: str) -> str:
+        return "".join(ch for ch in value.casefold() if ch.isalnum())

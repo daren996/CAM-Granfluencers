@@ -51,6 +51,62 @@ def first_image_url(item: dict[str, Any]) -> str | None:
     return item.get("display_url")
 
 
-def video_urls(item: dict[str, Any]) -> list[str]:
+def primary_video_url(item: dict[str, Any]) -> str | None:
     versions = item.get("video_versions", []) or []
-    return [version.get("url") for version in versions if version.get("url")]
+    for version in versions:
+        url = version.get("url")
+        if url:
+            return url
+    return None
+
+
+def media_assets(item: dict[str, Any]) -> list[dict[str, Any]]:
+    entries = item.get("carousel_media") or [item]
+    assets: list[dict[str, Any]] = []
+
+    for position, entry in enumerate(entries, start=1):
+        media_entry = entry or {}
+        media_type = media_type_name(media_entry.get("media_type", item.get("media_type")))
+        image_url = first_image_url(media_entry)
+        video_url = primary_video_url(media_entry)
+
+        if media_type == "video" and video_url:
+            asset = {
+                "position": position,
+                "media_type": "video",
+                "url": video_url,
+            }
+            if image_url:
+                asset["thumbnail_url"] = image_url
+            assets.append(asset)
+            continue
+
+        if image_url:
+            assets.append(
+                {
+                    "position": position,
+                    "media_type": "image",
+                    "url": image_url,
+                    "thumbnail_url": image_url,
+                }
+            )
+            continue
+
+        if video_url:
+            assets.append(
+                {
+                    "position": position,
+                    "media_type": "video",
+                    "url": video_url,
+                }
+            )
+
+    return assets
+
+
+def image_urls(item: dict[str, Any]) -> list[str]:
+    return [asset["url"] for asset in media_assets(item) if asset.get("media_type") == "image"]
+
+
+def video_urls(item: dict[str, Any]) -> list[str]:
+    return [asset["url"] for asset in media_assets(item) if asset.get("media_type") == "video"]

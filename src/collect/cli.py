@@ -5,11 +5,13 @@ import json
 import sys
 
 from .client import TikHubClient
+from .cleanup import clear_results
 from .env import load_dotenv_if_present
 from .exceptions import TikHubConfigurationError, TikHubError
 from .models import AccountRef
 from .service import collect_account_bundle
 from .exporter import export_dashboard_data, sync_docs_data
+from .server import run_local_server
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -41,12 +43,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     export_parser = subparsers.add_parser(
-        "export-dashboard", help="Export dashboard JSON files from collected bundle data."
+        "export-dashboard", help="Export dashboard JSON files from collected account and item data."
     )
     export_parser.add_argument(
         "--input",
         required=True,
-        help="Path to bundle.json or a directory containing bundle.json files.",
+        help="Path to data/collect, account.json, item.json, or a legacy bundle.json file.",
     )
     export_parser.add_argument(
         "--output-dir",
@@ -67,6 +69,48 @@ def build_parser() -> argparse.ArgumentParser:
         "--docs-dir",
         default="docs/data",
         help="Published docs data directory.",
+    )
+
+    clear_parser = subparsers.add_parser(
+        "clear-results",
+        help="Remove matching collected account trees or legacy runs, then rebuild exports.",
+    )
+    clear_parser.add_argument("--platform", required=True, help="Platform name, e.g. instagram.")
+    clear_parser.add_argument("--username", help="Platform username.")
+    clear_parser.add_argument("--user-id", help="Platform numeric user id.")
+    clear_parser.add_argument("--account-id", help="Collected account id stored in profile data.")
+    clear_parser.add_argument("--run-id", help="Specific legacy run id to clear.")
+    clear_parser.add_argument(
+        "--clear-all-on-platform",
+        action="store_true",
+        help="Allow clearing all results for the selected platform when no identifier is provided.",
+    )
+    clear_parser.add_argument(
+        "--collect-root",
+        default="data/collect",
+        help="Directory containing collected account trees and legacy bundle runs.",
+    )
+    clear_parser.add_argument(
+        "--dashboard-dir",
+        default="data/dashboard",
+        help="Canonical dashboard data directory.",
+    )
+    clear_parser.add_argument(
+        "--docs-dir",
+        default="docs/data",
+        help="Published docs data directory.",
+    )
+
+    serve_parser = subparsers.add_parser(
+        "serve",
+        help="Serve docs/ locally together with a local API for interactive collection actions.",
+    )
+    serve_parser.add_argument("--host", default="127.0.0.1", help="Host to bind the local server.")
+    serve_parser.add_argument("--port", type=int, default=8000, help="Port for the local server.")
+    serve_parser.add_argument(
+        "--docs-dir",
+        default="docs",
+        help="Directory of static docs files to serve.",
     )
 
     subparsers.add_parser(
@@ -107,6 +151,24 @@ def main() -> int:
         written = sync_docs_data(args.source_dir, docs_dir=args.docs_dir)
         print(json.dumps(written, indent=2, ensure_ascii=True))
         return 0
+
+    if args.command == "clear-results":
+        result = clear_results(
+            platform=args.platform,
+            username=args.username,
+            user_id=args.user_id,
+            account_id=args.account_id,
+            run_id=args.run_id,
+            clear_all_on_platform=args.clear_all_on_platform,
+            collect_root=args.collect_root,
+            dashboard_dir=args.dashboard_dir,
+            docs_dir=args.docs_dir,
+        )
+        print(json.dumps(result, indent=2, ensure_ascii=True))
+        return 0
+
+    if args.command == "serve":
+        return run_local_server(host=args.host, port=args.port, docs_dir=args.docs_dir)
 
     if args.command == "check":
         return _run_check()

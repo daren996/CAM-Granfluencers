@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Any
+import unicodedata
 
 Cursor = str | None
 
@@ -15,6 +16,18 @@ class AccountRef:
     user_id: str | None = None
 
     def __post_init__(self) -> None:
+        normalized_username = _normalize_identifier(self.username, strip_at=True)
+        normalized_user_id = _normalize_identifier(self.user_id)
+
+        if self.platform.lower() == "instagram" and not normalized_username and normalized_user_id:
+            candidate_username = normalized_user_id.lstrip("@")
+            if candidate_username and not candidate_username.isdigit():
+                normalized_username = candidate_username
+                normalized_user_id = None
+
+        object.__setattr__(self, "username", normalized_username)
+        object.__setattr__(self, "user_id", normalized_user_id)
+
         if not self.username and not self.user_id:
             raise ValueError("AccountRef requires either username or user_id.")
 
@@ -29,6 +42,17 @@ class AccountRef:
     @property
     def slug(self) -> str:
         return self.username or str(self.user_id)
+
+
+def _normalize_identifier(value: Any, *, strip_at: bool = False) -> str | None:
+    if value is None:
+        return None
+    cleaned = "".join(
+        ch for ch in str(value) if unicodedata.category(ch) != "Cf"
+    ).strip()
+    if strip_at:
+        cleaned = cleaned.lstrip("@")
+    return cleaned or None
 
 
 @dataclass(frozen=True)

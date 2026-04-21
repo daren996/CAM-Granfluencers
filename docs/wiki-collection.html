@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CAM Granfluencers | Wiki | Collection Guide</title>
+    <link rel="stylesheet" href="./assets/css/site.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="sidebar">
+        <a class="brand" href="./index.html">CAM Granfluencers</a>
+        <div class="lang-switch">
+          <a class="is-active" href="./wiki-collection.html">English</a>
+          <span>/</span>
+          <a href="./wiki-collection.zh-CN.html">中文</a>
+        </div>
+        <p class="sidebar-title">Navigate</p>
+        <nav class="nav-list">
+          <a class="nav-link" href="./index.html">Home</a>
+          <a class="nav-link is-active" href="./wiki.html">Wiki</a>
+          <a class="nav-link" href="./collect.html">Collect</a>
+          <a class="nav-link" href="./analysis.html">Analysis</a>
+          <a class="nav-link" href="./results.html">Results</a>
+          <a class="nav-link" href="./setup.html">Setup</a>
+        </nav>
+        <div class="sidebar-note">
+          Wiki chapter: collection methods, local commands, and the TikHub-backed data workflow.
+        </div>
+      </aside>
+
+      <main class="content">
+        <header class="page-header">
+          <p class="eyebrow">Wiki Chapter</p>
+          <h1>Collection guide</h1>
+          <p class="lede">
+            This chapter preserves the project's collection documentation: why TikHub is used, how
+            the collector is structured, what files are written, and which commands prepare data
+            for the site.
+          </p>
+        </header>
+
+        <section class="section">
+          <p class="section-label">Chapter Navigation</p>
+          <h2>Wiki pages</h2>
+          <div class="chapter-nav">
+            <a href="./wiki.html">Back to wiki hub</a>
+            <a href="./collect.html">Open the interactive collect page</a>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Why TikHub</h2>
+          <ul>
+            <li>One API key can cover multiple social platforms.</li>
+            <li>Instagram endpoints already cover profile lookup, post pagination, comments, replies, and search.</li>
+            <li>The repository keeps normalization, storage, export, and docs publication logic in-house.</li>
+          </ul>
+        </section>
+
+        <section class="section">
+          <h2>API key setup</h2>
+          <ol>
+            <li>Create or sign in to a TikHub account.</li>
+            <li>Generate an API key from the TikHub dashboard.</li>
+            <li>Store it in the local <code>.env</code> file.</li>
+          </ol>
+          <pre><code>TIKHUB_API_KEY=your_real_api_key</code></pre>
+        </section>
+
+        <section class="section">
+          <h2>Collector architecture</h2>
+          <ul>
+            <li><code>src/collect/</code>: client, collector interfaces, Instagram implementation, CLI, and export logic.</li>
+            <li><code>data/collect/</code>: account snapshots, post/reel item records, and raw API responses.</li>
+            <li><code>data/dashboard/</code>: canonical dashboard-facing JSON.</li>
+            <li><code>docs/data/</code>: published mirror used by the HTML site.</li>
+          </ul>
+          <p>The public CLI entrypoints are:</p>
+          <ul>
+            <li><code>python3 -m src.collect collect-account ...</code></li>
+            <li><code>python3 -m src.collect export-dashboard --input data/collect</code></li>
+            <li><code>python3 -m src.collect sync-docs-data</code></li>
+            <li><code>python3 -m src.collect serve</code></li>
+          </ul>
+        </section>
+
+        <section class="section">
+          <h2>Local usage</h2>
+          <pre><code>python3 -m src.collect collect-account \
+  --platform instagram \
+  --username nasa \
+  --max-posts 5
+
+python3 -m src.collect collect-account \
+  --platform instagram \
+  --username nasa \
+  --include-comments \
+  --max-posts 3 \
+  --max-comment-pages 2
+
+python3 -m src.collect export-dashboard --input data/collect
+python3 -m src.collect sync-docs-data
+python3 -m src.collect serve</code></pre>
+        </section>
+
+        <section class="section">
+          <h2>Data written to <code>data/</code></h2>
+          <p>Collected data is organized by account, then by post or reel item:</p>
+          <pre><code>data/collect/&lt;platform&gt;/&lt;account-slug&gt;/
+  account.json
+  raw/account/profile.json
+  media/account/profile.jpg
+  posts/&lt;post-code-or-id&gt;/item.json
+  reels/&lt;reel-code-or-id&gt;/item.json</code></pre>
+          <ul>
+            <li><code>account.json</code>: normalized account profile, stored item metrics, request metadata, and the account-level extraction timestamp.</li>
+            <li><code>posts/*/item.json</code> and <code>reels/*/item.json</code>: one normalized record per collected item, including comments, replies, request metadata, local media paths, full image/video asset lists, and the item extraction timestamp.</li>
+            <li><code>raw/account/profile.json</code>: raw profile response.</li>
+            <li><code>raw/account_posts/*.json</code>: raw account feed page responses.</li>
+            <li><code>posts/*/raw/detail.json</code>: raw item detail response.</li>
+            <li><code>posts/*/raw/comments/*.json</code> and <code>reels/*/raw/comments/*.json</code>: raw comment page responses for each item.</li>
+            <li><code>posts/*/raw/replies/*.json</code> and <code>reels/*/raw/replies/*.json</code>: raw reply page responses for each item.</li>
+            <li><code>media/account/*</code>: downloaded account profile images.</li>
+            <li><code>posts/*/media/*</code> and <code>reels/*/media/*</code>: downloaded media files saved per collected item, including reel videos and every asset inside mixed carousels.</li>
+          </ul>
+        </section>
+
+        <section class="section">
+          <h2>Dashboard export contract</h2>
+          <p>
+            The exporter transforms collected account and item records into static JSON used by the site. The
+            canonical files are:
+          </p>
+          <ul>
+            <li><code>data/dashboard/site-summary.json</code></li>
+            <li><code>data/dashboard/accounts.json</code></li>
+            <li><code>data/dashboard/posts.json</code></li>
+            <li><code>data/dashboard/hashtags.json</code></li>
+            <li><code>data/dashboard/engagement-timeseries.json</code></li>
+          </ul>
+          <p>
+            The <code>sync-docs-data</code> command copies those files into <code>docs/data/</code>
+            for GitHub Pages publishing.
+          </p>
+        </section>
+
+        <section class="section">
+          <h2>Cost and rate limit notes</h2>
+          <p>
+            TikHub uses pay-as-you-go pricing. Several Instagram endpoints referenced by this
+            project were documented at <code>0.002 USD/request</code> on April 19, 2026, but pricing
+            can change. Re-check before large runs.
+          </p>
+          <ul>
+            <li><a href="https://tikhub.io/pricing">TikHub pricing</a></li>
+            <li><a href="https://docs.tikhub.io/">TikHub docs</a></li>
+          </ul>
+        </section>
+
+        <section class="section">
+          <h2>Error handling</h2>
+          <ul>
+            <li><code>401</code>: missing, invalid, or expired API key.</li>
+            <li><code>402</code>: insufficient balance for a paid endpoint.</li>
+            <li><code>429</code>: rate limit hit; the client retries with backoff.</li>
+            <li><code>5xx</code>: transient upstream failures are retried automatically.</li>
+          </ul>
+        </section>
+
+        <p class="footer-note">Wiki chapter. Return to <a href="./wiki.html">Wiki</a>.</p>
+      </main>
+    </div>
+  </body>
+</html>

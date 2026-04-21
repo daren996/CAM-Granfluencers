@@ -15,6 +15,7 @@ SUITES = {
         "tests.test_instagram_collector",
         "tests.test_exporter",
         "tests.test_service_integration",
+        "tests.test_server",
     ],
 }
 

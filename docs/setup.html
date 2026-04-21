@@ -68,6 +68,20 @@ make docs-data</code></pre>
         </section>
 
         <section class="section">
+          <h2>Interactive local collect page</h2>
+          <p>
+            The top-level <a href="./collect.html">Collect</a> page now acts as a local interactive
+            console. To use it, serve the docs site together with the local API:
+          </p>
+          <pre><code>python3 -m src.collect serve</code></pre>
+          <p>
+            Then open <code>http://127.0.0.1:8000/collect.html</code>. The older collection
+            documentation now lives in the wiki chapter
+            <a href="./wiki-collection.html">Collection guide</a>.
+          </p>
+        </section>
+
+        <section class="section">
           <h2>Important notes</h2>
           <ul>
             <li>The docs site is HTML-based, so page structure, styling, and scripts live directly in <code>docs/</code>.</li>
