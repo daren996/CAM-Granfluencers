@@ -448,6 +448,7 @@ def _build_account_metrics(account_dir: Path) -> dict[str, int]:
     stored_reels = 0
     stored_likes = 0
     stored_comments = 0
+    stored_plays = 0
 
     for item_path in sorted(account_dir.glob("posts/*/item.json")):
         post = _load_item_post(item_path)
@@ -456,6 +457,7 @@ def _build_account_metrics(account_dir: Path) -> dict[str, int]:
         stored_posts += 1
         stored_likes += int(post.get("metrics", {}).get("likes") or 0)
         stored_comments += int(post.get("metrics", {}).get("comments") or 0)
+        stored_plays += int(post.get("metrics", {}).get("plays") or 0)
 
     for item_path in sorted(account_dir.glob("reels/*/item.json")):
         post = _load_item_post(item_path)
@@ -464,6 +466,7 @@ def _build_account_metrics(account_dir: Path) -> dict[str, int]:
         stored_reels += 1
         stored_likes += int(post.get("metrics", {}).get("likes") or 0)
         stored_comments += int(post.get("metrics", {}).get("comments") or 0)
+        stored_plays += int(post.get("metrics", {}).get("plays") or 0)
 
     return {
         "stored_items": stored_posts + stored_reels,
@@ -471,6 +474,7 @@ def _build_account_metrics(account_dir: Path) -> dict[str, int]:
         "stored_reels": stored_reels,
         "stored_likes": stored_likes,
         "stored_comments": stored_comments,
+        "stored_plays": stored_plays,
     }
 
 

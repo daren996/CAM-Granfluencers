@@ -2,8 +2,10 @@ const DASHBOARD_DATA_FILES = Object.freeze({
   siteSummary: "./data/site-summary.json",
   accounts: "./data/accounts.json",
   posts: "./data/posts.json",
+  comments: "./data/comments.json",
   hashtags: "./data/hashtags.json",
   engagementTimeseries: "./data/engagement-timeseries.json",
+  collectionTree: "./data/collection-tree.json",
 });
 
 async function fetchDashboardData(key) {

@@ -34,7 +34,8 @@
           <h1>基于 HTML 的分析与 dashboard 视图</h1>
           <p class="lede">
             这一页是文档站中的 dashboard。页面读取的是同步后的 <code>docs/data/</code> JSON，
-            而规范的导出数据仍然保存在 <code>data/dashboard/</code>。
+            而规范的导出数据仍然保存在 <code>data/dashboard/</code>。页面上方保留快速浏览表格，
+            下方新增层级采集树，可按 platform、account、post/reel 逐层展开查看完整字段。
           </p>
         </header>
 
@@ -62,6 +63,11 @@
         <section class="section">
           <h2>互动时间线</h2>
           <div data-analysis-timeline></div>
+        </section>
+
+        <section class="section">
+          <h2>层级采集树</h2>
+          <div data-analysis-tree></div>
         </section>
       </main>
     </div>

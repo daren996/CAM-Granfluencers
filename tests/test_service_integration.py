@@ -75,6 +75,7 @@ class CollectServiceIntegrationTest(unittest.TestCase):
             item_path = Path(bundle["output_paths"]["items"][0])
             self.assertEqual(item_path.parent.parent.name, "reels")
             self.assertEqual(bundle["posts"][0]["item_type"], "reel")
+            self.assertEqual(bundle["posts"][0]["metrics"]["plays"], 456)
             self.assertEqual(len(bundle["posts"][0]["video_local_paths"]), 1)
             self.assertTrue(Path(bundle["posts"][0]["video_local_paths"][0]).exists())
             self.assertTrue(Path(bundle["posts"][0]["thumbnail_local_path"]).exists())
@@ -317,6 +318,7 @@ class CollectServiceIntegrationTest(unittest.TestCase):
                                     "taken_at": 1713489600,
                                     "like_count": 99,
                                     "comment_count": 12,
+                                    "play_count": 456,
                                     "media_type": 2,
                                     "product_type": "clips",
                                     "display_url": "https://img/reel-thumb.jpg",
@@ -349,6 +351,7 @@ class CollectServiceIntegrationTest(unittest.TestCase):
                                 "taken_at": 1713489600,
                                 "like_count": 99,
                                 "comment_count": 12,
+                                "play_count": 456,
                                 "media_type": 2,
                                 "product_type": "clips",
                                 "image_versions2": {

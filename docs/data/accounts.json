@@ -1,1 +1,93 @@
-[]
+[
+  {
+    "platform": "instagram",
+    "account_id": "359811635",
+    "username": "grandma_droniak",
+    "full_name": "Grandma Droniak",
+    "biography": "I'm a celebrity and a 96 year old grandma.\nYes i can be your grandma too\ncontact @kevindroniak for business inquires.",
+    "external_url": "https://www.bonfire.com/store/grandma-droniak-merch/?srsltid=AfmBOoo6CtJfcBHMIqVdGLqtPMSzmNSy47IUgM-Hn25eSZigZ9JoQK5S",
+    "profile_pic_url": "https://scontent-bos5-1.cdninstagram.com/v/t51.2885-19/146966746_417523999313893_9059018536105011288_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby43NTcuYzIifQ&_nc_ht=scontent-bos5-1.cdninstagram.com&_nc_cat=1&_nc_oc=Q6cZ2gH74cIu5r1-yj8P8uRh72t8vL3wTsU7gG_-6yzmfdpaUjTtMckGBWI0Hv5msm2BPm8&_nc_ohc=AQ9DdLs7M3UQ7kNvwHZEkTZ&_nc_gid=IPoBOQTDZfH42p3MdZkEaw&edm=ALGbJPMBAAAA&ccb=7-5&oh=00_Af33oE9Yo-rJ-nSnHgeXXubuC7Ef6zLpntu-H2QIrOhF9g&oe=69EC9EB9&_nc_sid=7d3ac5",
+    "profile_pic_local_path": null,
+    "profile_pic_download": null,
+    "profile_pic_download_error": null,
+    "is_verified": false,
+    "is_private": false,
+    "followers": 3847187,
+    "following": 1,
+    "posts_count": 1004,
+    "reels_count": 1,
+    "stored_items": 8,
+    "stored_posts": 1,
+    "stored_reels": 7,
+    "stored_likes": 4006851,
+    "stored_comments": 92222,
+    "stored_plays": 0,
+    "raw_ids": {
+      "user_id": "359811635"
+    },
+    "request_meta": {
+      "source_endpoint": "/api/v1/instagram/v3/get_user_profile",
+      "request_url": null,
+      "request_params": {
+        "username": "grandma_droniak"
+      },
+      "fetched_at": "2026-04-20 17:07:32",
+      "request_id": "26856abb-f1aa-449e-8004-8d82d25b3c63",
+      "router": "/api/v1/instagram/v3/get_user_profile",
+      "docs": "https://api.tikhub.io/#/Instagram-V3-API/get_user_profile_api_v1_instagram_v3_get_user_profile_get",
+      "cache_url": "https://cache.tikhub.io/api/v1/cache/public/26856abb-f1aa-449e-8004-8d82d25b3c63?sign=112038b396f21caa338f0656ee9894f1ec0c2d08b84cff1ea956e7adfd440457",
+      "cache_message": "This request will be cached. You can access the cached result directly using the URL below, valid for 24 hours. Accessing the cache will not incur additional charges.",
+      "cache_message_zh": "\u672c\u6b21\u8bf7\u6c42\u5c06\u88ab\u7f13\u5b58\uff0c\u4f60\u53ef\u4ee5\u4f7f\u7528\u4e0b\u9762\u7684 URL \u76f4\u63a5\u8bbf\u95ee\u7f13\u5b58\u7ed3\u679c\uff0c\u6709\u6548\u671f\u4e3a 24 \u5c0f\u65f6\uff0c\u8bbf\u95ee\u7f13\u5b58\u4e0d\u4f1a\u4ea7\u751f\u989d\u5916\u8d39\u7528\u3002"
+    },
+    "account_ref": {
+      "platform": "instagram",
+      "username": "grandma_droniak",
+      "user_id": "359811635"
+    },
+    "include_comments": true,
+    "metrics": {
+      "stored_items": 8,
+      "stored_posts": 1,
+      "stored_reels": 7,
+      "stored_likes": 4006851,
+      "stored_comments": 92222,
+      "stored_plays": 0
+    },
+    "profile": {
+      "platform": "instagram",
+      "account_id": "359811635",
+      "username": "grandma_droniak",
+      "full_name": "Grandma Droniak",
+      "biography": "I'm a celebrity and a 96 year old grandma.\nYes i can be your grandma too\ncontact @kevindroniak for business inquires.",
+      "external_url": "https://www.bonfire.com/store/grandma-droniak-merch/?srsltid=AfmBOoo6CtJfcBHMIqVdGLqtPMSzmNSy47IUgM-Hn25eSZigZ9JoQK5S",
+      "profile_pic_url": "https://scontent-bos5-1.cdninstagram.com/v/t51.2885-19/146966746_417523999313893_9059018536105011288_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby43NTcuYzIifQ&_nc_ht=scontent-bos5-1.cdninstagram.com&_nc_cat=1&_nc_oc=Q6cZ2gH74cIu5r1-yj8P8uRh72t8vL3wTsU7gG_-6yzmfdpaUjTtMckGBWI0Hv5msm2BPm8&_nc_ohc=AQ9DdLs7M3UQ7kNvwHZEkTZ&_nc_gid=IPoBOQTDZfH42p3MdZkEaw&edm=ALGbJPMBAAAA&ccb=7-5&oh=00_Af33oE9Yo-rJ-nSnHgeXXubuC7Ef6zLpntu-H2QIrOhF9g&oe=69EC9EB9&_nc_sid=7d3ac5",
+      "is_verified": false,
+      "is_private": false,
+      "followers_count": 3847187,
+      "following_count": 1,
+      "posts_count": 1004,
+      "reels_count": 1,
+      "raw_ids": {
+        "user_id": "359811635"
+      },
+      "request_meta": {
+        "source_endpoint": "/api/v1/instagram/v3/get_user_profile",
+        "request_url": null,
+        "request_params": {
+          "username": "grandma_droniak"
+        },
+        "fetched_at": "2026-04-20 17:07:32",
+        "request_id": "26856abb-f1aa-449e-8004-8d82d25b3c63",
+        "router": "/api/v1/instagram/v3/get_user_profile",
+        "docs": "https://api.tikhub.io/#/Instagram-V3-API/get_user_profile_api_v1_instagram_v3_get_user_profile_get",
+        "cache_url": "https://cache.tikhub.io/api/v1/cache/public/26856abb-f1aa-449e-8004-8d82d25b3c63?sign=112038b396f21caa338f0656ee9894f1ec0c2d08b84cff1ea956e7adfd440457",
+        "cache_message": "This request will be cached. You can access the cached result directly using the URL below, valid for 24 hours. Accessing the cache will not incur additional charges.",
+        "cache_message_zh": "\u672c\u6b21\u8bf7\u6c42\u5c06\u88ab\u7f13\u5b58\uff0c\u4f60\u53ef\u4ee5\u4f7f\u7528\u4e0b\u9762\u7684 URL \u76f4\u63a5\u8bbf\u95ee\u7f13\u5b58\u7ed3\u679c\uff0c\u6709\u6548\u671f\u4e3a 24 \u5c0f\u65f6\uff0c\u8bbf\u95ee\u7f13\u5b58\u4e0d\u4f1a\u4ea7\u751f\u989d\u5916\u8d39\u7528\u3002"
+      }
+    },
+    "request_log": [],
+    "output_paths": {},
+    "extracted_at": "2026-04-21T00:07:31.332855Z",
+    "collected_at": "2026-04-21T00:07:31.332855Z"
+  }
+]

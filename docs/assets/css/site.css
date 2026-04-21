@@ -320,6 +320,106 @@ th {
   font-weight: 700;
 }
 
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  background: #fafafa;
+  font-size: 0.9rem;
+}
+
+.chip strong {
+  font-size: 0.95rem;
+}
+
+.compact-definition-list {
+  margin-top: 16px;
+}
+
+.compact-definition-list .definition-row {
+  gap: 14px;
+  padding: 6px 0;
+}
+
+.tree-root,
+.tree-children {
+  display: grid;
+  gap: 14px;
+}
+
+.tree-node {
+  border: 1px solid var(--line);
+  background: #fcfcfc;
+}
+
+.tree-node > summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 16px;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 700;
+}
+
+.tree-node > summary::-webkit-details-marker {
+  display: none;
+}
+
+.tree-summary-meta {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.tree-node-body {
+  display: grid;
+  gap: 16px;
+  padding: 0 16px 16px;
+  border-top: 1px solid var(--line);
+}
+
+.tree-subsection {
+  display: grid;
+  gap: 12px;
+}
+
+.json-details {
+  border: 1px solid var(--line);
+  background: #ffffff;
+}
+
+.json-details > summary {
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.json-block {
+  margin: 0;
+  max-height: 320px;
+  border-top: 1px solid #2d2d2d;
+  overflow: auto;
+}
+
+.tree-comment {
+  background: #ffffff;
+}
+
 code,
 pre {
   font-family: var(--font-mono);
@@ -545,5 +645,14 @@ pre {
 
   .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .tree-node > summary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tree-summary-meta {
+    text-align: left;
   }
 }

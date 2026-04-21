@@ -36,6 +36,7 @@ class ExporterTest(unittest.TestCase):
                 "stored_reels": 0,
                 "stored_likes": 25,
                 "stored_comments": 3,
+                "stored_plays": 40,
             },
         }
         item = {
@@ -85,7 +86,7 @@ class ExporterTest(unittest.TestCase):
                         "thumbnail_local_path": "data/collect/instagram/nasa/posts/ABC123/media/02-video-thumb.jpg",
                     },
                 ],
-                "metrics": {"likes": 25, "comments": 3},
+                "metrics": {"likes": 25, "comments": 3, "plays": 40},
                 "author": {"account_id": "u1", "username": "nasa"},
             },
             "comments": [{"comment_id": "c1", "platform": "instagram", "post_ref": {"code": "ABC123"}}],
@@ -108,6 +109,8 @@ class ExporterTest(unittest.TestCase):
                 sorted(written.keys()),
                 [
                     "accounts",
+                    "collection_tree",
+                    "comments",
                     "engagement_timeseries",
                     "hashtags",
                     "posts",
@@ -118,14 +121,24 @@ class ExporterTest(unittest.TestCase):
             self.assertEqual(site_summary["counts"]["accounts"], 1)
             self.assertEqual(site_summary["counts"]["posts"], 1)
             self.assertEqual(site_summary["counts"]["comments"], 2)
+            self.assertEqual(site_summary["counts"]["replies"], 1)
             accounts = json.loads((output_dir / "accounts.json").read_text(encoding="utf-8"))
             self.assertEqual(accounts[0]["profile_pic_local_path"], account["profile"]["profile_pic_local_path"])
             self.assertEqual(accounts[0]["stored_likes"], 25)
+            self.assertEqual(accounts[0]["stored_plays"], 40)
             posts = json.loads((output_dir / "posts.json").read_text(encoding="utf-8"))
             self.assertEqual(posts[0]["thumbnail_local_path"], item["post"]["thumbnail_local_path"])
             self.assertEqual(posts[0]["item_type"], "post")
             self.assertEqual(posts[0]["video_local_paths"], item["post"]["video_local_paths"])
             self.assertEqual(posts[0]["media_assets"][1]["media_type"], "video")
+            self.assertEqual(posts[0]["plays"], 40)
+            comments = json.loads((output_dir / "comments.json").read_text(encoding="utf-8"))
+            self.assertEqual([row["comment_type"] for row in comments], ["reply", "comment"])
+            collection_tree = json.loads(
+                (output_dir / "collection-tree.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(collection_tree["counts"]["platforms"], 1)
+            self.assertEqual(collection_tree["platforms"][0]["accounts"][0]["items"][0]["item_key"], "ABC123")
             hashtags = json.loads((output_dir / "hashtags.json").read_text(encoding="utf-8"))
             self.assertEqual(hashtags[0]["hashtag"], "space")
 
@@ -173,7 +186,7 @@ class ExporterTest(unittest.TestCase):
                     "media_local_paths": [
                         "data/collect/instagram/nasa/run-1/media/posts/ABC123/video-01.mp4"
                     ],
-                    "metrics": {"likes": 25, "comments": 3},
+                    "metrics": {"likes": 25, "comments": 3, "plays": 12},
                     "author": {"account_id": "u1", "username": "nasa"},
                 }
             ],
@@ -190,6 +203,80 @@ class ExporterTest(unittest.TestCase):
             posts = json.loads((output_dir / "posts.json").read_text(encoding="utf-8"))
             self.assertEqual(posts[0]["post_id"], "p1")
             self.assertEqual(posts[0]["video_urls"], ["https://video/post.mp4"])
+            self.assertEqual(posts[0]["plays"], 12)
+
+    def test_export_dashboard_data_uses_raw_profile_when_account_json_is_missing(self) -> None:
+        raw_profile = {
+            "time": "2026-04-20 17:07:32",
+            "request_id": "profile-raw-1",
+            "docs": "https://docs.tikhub.io/example",
+            "router": "/api/v1/instagram/v3/get_user_profile",
+            "params": {"username": "grandma_droniak"},
+            "data": {
+                "user": {
+                    "id": "359811635",
+                    "pk": "359811635",
+                    "username": "grandma_droniak",
+                    "full_name": "Grandma Droniak",
+                    "biography": "Grandma influencer",
+                    "external_url": "https://example.com",
+                    "profile_pic_url": "https://img/profile.jpg",
+                    "is_verified": False,
+                    "is_private": False,
+                    "follower_count": 3847187,
+                    "following_count": 1,
+                    "media_count": 1004,
+                    "total_clips_count": 1,
+                }
+            },
+        }
+        item = {
+            "platform": "instagram",
+            "account_ref": {"platform": "instagram", "username": "grandma_droniak"},
+            "item_type": "reel",
+            "item_key": "REEL123",
+            "extracted_at": "2026-04-21T00:07:31.332855Z",
+            "post": {
+                "platform": "instagram",
+                "post_id": "r1",
+                "code": "REEL123",
+                "url": "https://www.instagram.com/reel/REEL123/",
+                "item_type": "reel",
+                "caption": "Hello reel #space",
+                "hashtags": ["space"],
+                "media_type": "video",
+                "taken_at": "2026-04-18T12:00:00Z",
+                "metrics": {"likes": 99, "comments": 12},
+                "author": {
+                    "account_id": "359811635",
+                    "username": "grandma_droniak",
+                    "full_name": "Grandma Droniak",
+                    "is_verified": False,
+                },
+            },
+            "comments": [],
+            "replies": [],
+        }
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            input_root = Path(temp_dir) / "collect" / "instagram" / "grandma_droniak"
+            output_dir = Path(temp_dir) / "dashboard"
+            (input_root / "raw" / "account").mkdir(parents=True, exist_ok=True)
+            (input_root / "reels" / "REEL123").mkdir(parents=True, exist_ok=True)
+            (input_root / "raw" / "account" / "profile.json").write_text(
+                json.dumps(raw_profile),
+                encoding="utf-8",
+            )
+            (input_root / "reels" / "REEL123" / "item.json").write_text(
+                json.dumps(item),
+                encoding="utf-8",
+            )
+
+            export_dashboard_data(input_root.parent.parent, output_dir=output_dir)
+            accounts = json.loads((output_dir / "accounts.json").read_text(encoding="utf-8"))
+            self.assertEqual(accounts[0]["username"], "grandma_droniak")
+            self.assertEqual(accounts[0]["followers"], 3847187)
+            self.assertEqual(accounts[0]["following"], 1)
 
     def test_sync_docs_data_copies_expected_files(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -199,8 +286,10 @@ class ExporterTest(unittest.TestCase):
                 "site-summary.json": {"project_status": "waiting_for_data"},
                 "accounts.json": [],
                 "posts.json": [],
+                "comments.json": [],
                 "hashtags.json": [],
                 "engagement-timeseries.json": [],
+                "collection-tree.json": {"counts": {"platforms": 0}, "platforms": []},
             }
             source_dir.mkdir(parents=True, exist_ok=True)
             for filename, payload in sample_payloads.items():
@@ -215,6 +304,8 @@ class ExporterTest(unittest.TestCase):
                 sorted(written.keys()),
                 [
                     "accounts",
+                    "collection_tree",
+                    "comments",
                     "engagement_timeseries",
                     "hashtags",
                     "posts",
@@ -224,6 +315,10 @@ class ExporterTest(unittest.TestCase):
             self.assertEqual(
                 json.loads((docs_dir / "site-summary.json").read_text(encoding="utf-8")),
                 {"project_status": "waiting_for_data"},
+            )
+            self.assertEqual(
+                json.loads((docs_dir / "collection-tree.json").read_text(encoding="utf-8")),
+                {"counts": {"platforms": 0}, "platforms": []},
             )
 
 

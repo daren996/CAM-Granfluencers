@@ -1,13 +1,18 @@
 {
-  "updated_at": "2026-04-21T00:07:08.074596Z",
-  "project_status": "waiting_for_data",
+  "updated_at": "2026-04-21T00:07:31.332855Z",
+  "project_status": "ready_with_data",
   "counts": {
-    "accounts": 0,
-    "posts": 0,
-    "comments": 0
+    "platforms": 1,
+    "accounts": 1,
+    "items": 8,
+    "posts": 1,
+    "reels": 7,
+    "comments": 1922,
+    "top_level_comments": 600,
+    "replies": 1322
   },
   "date_range": {
-    "start": null,
-    "end": null
+    "start": "2026-03-13T18:20:49Z",
+    "end": "2026-04-02T18:14:45Z"
   }
 }

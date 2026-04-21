@@ -184,6 +184,7 @@ class InstagramCollector(BaseCollector):
             "metrics": {
                 "likes": node.get("like_count"),
                 "comments": node.get("comment_count"),
+                "plays": node.get("play_count"),
             },
             "author": {
                 "account_id": self._stringify(author.get("id")),

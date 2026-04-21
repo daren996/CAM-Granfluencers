@@ -1,1 +1,74 @@
-[]
+[
+  {
+    "date": "2026-03-13",
+    "items": 1,
+    "posts": 0,
+    "reels": 1,
+    "likes": 48356,
+    "comments": 1085,
+    "plays": 0
+  },
+  {
+    "date": "2026-03-16",
+    "items": 1,
+    "posts": 0,
+    "reels": 1,
+    "likes": 292735,
+    "comments": 9215,
+    "plays": 0
+  },
+  {
+    "date": "2026-03-17",
+    "items": 1,
+    "posts": 0,
+    "reels": 1,
+    "likes": 238501,
+    "comments": 3491,
+    "plays": 0
+  },
+  {
+    "date": "2026-03-18",
+    "items": 1,
+    "posts": 0,
+    "reels": 1,
+    "likes": 2197215,
+    "comments": 57734,
+    "plays": 0
+  },
+  {
+    "date": "2026-03-19",
+    "items": 1,
+    "posts": 0,
+    "reels": 1,
+    "likes": 208141,
+    "comments": 7384,
+    "plays": 0
+  },
+  {
+    "date": "2026-03-20",
+    "items": 1,
+    "posts": 1,
+    "reels": 0,
+    "likes": 366838,
+    "comments": 5267,
+    "plays": 0
+  },
+  {
+    "date": "2026-03-26",
+    "items": 1,
+    "posts": 0,
+    "reels": 1,
+    "likes": 76249,
+    "comments": 1004,
+    "plays": 0
+  },
+  {
+    "date": "2026-04-02",
+    "items": 1,
+    "posts": 0,
+    "reels": 1,
+    "likes": 578816,
+    "comments": 7042,
+    "plays": 0
+  }
+]
